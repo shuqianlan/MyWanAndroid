@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">MyWanAndroid</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="bottom_menu_home">首页</string>
+    <string name="bottom_menu_square">广场</string>
+    <string name="bottom_menu_public">公众号</string>
+    <string name="bottom_menu_project">项目</string>
+    <string name="menu_home_search">搜索</string>
+
+</resources>
