@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".HomeFragment">
+    tools:context=".ui.fragments.HomeFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
@@ -16,6 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/toolbar"
+            app:popupTheme="@style/AppTheme"
             app:title="首页"
             />
     </com.google.android.material.appbar.AppBarLayout>
@@ -27,10 +28,29 @@
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
         >
 
-        <androidx.recyclerview.widget.RecyclerView
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            >
 
-            />
+            <com.xihu.mywanandroid.ui.view.CarouselLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="H,16:9"
+                android:background="@color/colorPrimary"
+                android:id="@+id/carousel_cont"
+                app:layout_constraintTop_toTopOf="parent"
+                />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/articles"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/carousel_cont"
+                app:layout_constraintVertical_weight="1" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_public"
-        android:name="com.xihu.mywanandroid.PublicFragment"
+        android:name="com.xihu.mywanandroid.ui.fragments.PublicFragment"
         android:label="@string/bottom_menu_public"
         tools:layout="@layout/fragment_public" />
 </navigation>

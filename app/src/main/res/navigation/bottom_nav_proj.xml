@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/navigation_proj"
-        android:name="com.xihu.mywanandroid.ProjFragment"
+        android:name="com.xihu.mywanandroid.ui.fragments.ProjFragment"
         android:label="@string/bottom_menu_project"
         tools:layout="@layout/fragment_proj" />
 </navigation>

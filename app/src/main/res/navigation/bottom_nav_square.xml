@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/navigation_square"
-        android:name="com.xihu.mywanandroid.EntryFragment"
+        android:name="com.xihu.mywanandroid.ui.fragments.EntryFragment"
         android:label="@string/bottom_menu_square"
         tools:layout="@layout/fragment_entry" />
 </navigation>

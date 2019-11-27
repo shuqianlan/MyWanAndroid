@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.xihu.mywanandroid.HomeFragment"
+        android:name="com.xihu.mywanandroid.ui.fragments.HomeFragment"
         android:label="@string/bottom_menu_home"
         tools:layout="@layout/fragment_home" />
 </navigation>
