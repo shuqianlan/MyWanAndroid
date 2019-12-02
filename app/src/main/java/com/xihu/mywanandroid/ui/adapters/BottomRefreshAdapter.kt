@@ -22,7 +22,7 @@ import java.security.InvalidParameterException
 * */
 class BottomRefreshAdapter<T> private constructor(clazz: Class<T>, cb:InstanceBeansCallBack<T>): RecyclerView.Adapter<ViewHolder>() {
     private val FOOTER_VIEW_TAG = -1
-    private var beans: SortedList<T>? = null
+    public var beans: SortedList<T>? = null
 
     protected var onBindView: (view:View, bean:T) -> Unit = {view, bean ->  }
     protected var onClickItemView: ((view:View, bean:T) -> Unit)?=null
@@ -88,8 +88,10 @@ class BottomRefreshAdapter<T> private constructor(clazz: Class<T>, cb:InstanceBe
         return viewType
     }
 
-    fun extendDatas(beans: List<T>?) {
-        this.beans!!.addAll(beans!!)
+    inline fun<reified B:T> extendDatas(beans: List<B>) {
+        print(">>>>>>>>>>>>>>>>>>>>>. $beans")
+        this.beans!!.addAll(beans)
+        notifyDataSetChanged()
     }
 
     class Builder<B>(

@@ -20,34 +20,16 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
-class HomeFragment : Fragment() {
+class HomeFragment : BaseFragment<HomeViewModel>() {
 
-    private lateinit var viewModel:HomeViewModel
+    override fun providerViewModelClazz()=HomeViewModel::class.java
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        viewModel = ViewModelProvider.NewInstanceFactory().create(HomeViewModel::class.java).also {
-            it.getError().observe(getViewLifecycleOwner(), Observer {
-                print("Exception: $it")
-            })
-
-            it.loading().observe(getViewLifecycleOwner(), Observer {
-                print("Loading $it")
-            })
-
-            it.topArticles.observe(activity!!, Observer {
-                print("values::::: $it")
-                (articles.adapter as BottomRefreshAdapter<Article>).extendDatas(it)
-            })
-        }
 
         setHasOptionsMenu(true)
         return inflater.inflate(R.layout.fragment_home, container, false)
@@ -55,6 +37,21 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel.topArticles.observe(viewLifecycleOwner, Observer {
+            print("HomeFragment viewLifeCycleOwner $it ")
+            print("HomeFragment BBBBBBBBB ${articles.adapter is BottomRefreshAdapter<*>}")
+            
+            (articles.adapter as BottomRefreshAdapter<Article>).beans?.addAll(it)
+        })
+
+        viewModel.topArticles.observe(activity!!, Observer {
+            print("activity!! $it")
+        })
+
+        viewModel.topArticles.observe(this, Observer {
+            print("fragment!! $it")
+        })
 
         articles.adapter = BottomRefreshAdapter.Builder<Article>(bindToView = { view, bean -> {
             if (view is TextView) {
@@ -106,5 +103,6 @@ class HomeFragment : Fragment() {
         inflater.inflate(R.menu.menu_homes, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
+
 
 }
