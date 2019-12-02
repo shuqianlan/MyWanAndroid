@@ -45,7 +45,13 @@ class RemoteRepository private constructor(): BaseRepository() {
 
     suspend fun topArticles():ResponseData<List<Article>> = request {
         val response = apiService.topArticles()
-        print("response ========== $response")
+        print("topArticles ========== $response")
+        return@request response
+    }
+
+    suspend fun homeArticles(page:Int):ResponseData<List<Article>> = request {
+        val response = apiService.articles(page)
+        print("homeArticles ========== $response")
         return@request response
     }
 }

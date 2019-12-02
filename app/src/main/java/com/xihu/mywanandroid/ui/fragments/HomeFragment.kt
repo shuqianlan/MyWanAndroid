@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.SortedListAdapterCallback
+import com.xihu.huidefeng.net.repository.RemoteRepository
 import com.xihu.mywanandroid.R
 import com.xihu.mywanandroid.net.beans.Article
 import com.xihu.mywanandroid.ui.adapters.BottomRefreshAdapter
@@ -22,17 +23,32 @@ import kotlinx.coroutines.withContext
 class HomeFragment : Fragment() {
 
     private lateinit var viewModel:HomeViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
-        viewModel = ViewModelProvider.NewInstanceFactory().create(HomeViewModel::class.java)
+        viewModel = ViewModelProvider.NewInstanceFactory().create(HomeViewModel::class.java).also {
+            it.getError().observe(getViewLifecycleOwner(), Observer {
+                print("Exception: $it")
+            })
 
-        print("ahahahahahhahaha")
-        viewModel.topArticles.observe(activity!!, Observer {
-            print("====================>")
-        })
+            it.loading().observe(getViewLifecycleOwner(), Observer {
+                print("Loading $it")
+            })
+
+            it.topArticles.observe(activity!!, Observer {
+                print("values::::: $it")
+                (articles.adapter as BottomRefreshAdapter<Article>).extendDatas(it)
+            })
+        }
+
         setHasOptionsMenu(true)
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
@@ -40,31 +56,32 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        articles.adapter = BottomRefreshAdapter.Builder<String>(bindToView = { view, bean -> {
+        articles.adapter = BottomRefreshAdapter.Builder<Article>(bindToView = { view, bean -> {
             if (view is TextView) {
-                view.text = bean
+                view.text = bean.title
             }
         }}, viewLayout = {viewType -> android.R.layout.simple_list_item_1}, onLoadData = { adapter -> { runBlocking {
                 delay(2000)
+                viewModel.loadHomeArticles()
                 print("loading more ")
             }
         } },
-        clazz = String::class.java, instance = object :BottomRefreshAdapter.InstanceBeansCallBack<String> {
-                override fun instance(adapter: BottomRefreshAdapter<String>) =
-                    object :SortedListAdapterCallback<String>(adapter) {
-                        override fun areItemsTheSame(item1: String?, item2: String?): Boolean {
-                            return item1!! == item2!!
+        clazz = Article::class.java, instance = object :BottomRefreshAdapter.InstanceBeansCallBack<Article> {
+                override fun instance(adapter: BottomRefreshAdapter<Article>) =
+                    object :SortedListAdapterCallback<Article>(adapter) {
+                        override fun areItemsTheSame(item1: Article?, item2: Article?): Boolean {
+                            return false
                         }
 
-                        override fun compare(o1: String?, o2: String?): Int {
-                            return o1!!.compareTo(o2!!)
+                        override fun compare(o1: Article?, o2: Article?): Int {
+                            return 1
                         }
 
                         override fun areContentsTheSame(
-                            oldItem: String?,
-                            newItem: String?
+                            oldItem: Article?,
+                            newItem: Article?
                         ): Boolean {
-                            return oldItem!!.equals(newItem)
+                            return false
                         }
 
                     }
@@ -73,6 +90,11 @@ class HomeFragment : Fragment() {
 
         refresh_layout.setOnRefreshListener {
             refresh_layout.postDelayed(Runnable {
+                viewModel.launchUI {
+                    println("refresh_layout start")
+//                    val response = RemoteRepository.instance.topArticles()
+//                    println("refresh_layout $response end")
+                }
                 refresh_layout.isRefreshing = false
             }, 3000)
         }
