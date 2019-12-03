@@ -1,6 +1,8 @@
 package com.xihu.mywanandroid.ui.jetpack.viewmodels
 
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.OnLifecycleEvent
 import com.xihu.huidefeng.net.base.BaseViewModel
 import com.xihu.huidefeng.net.repository.RemoteRepository
 import com.xihu.mywanandroid.net.beans.Article
@@ -8,35 +10,22 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class HomeViewModel : BaseViewModel() {
 //    val bannerData = MutableLiveData<>
-    val topArticles:MutableLiveData<List<Article>> by lazy {
-        MutableLiveData<List<Article>>().also {
-            loadTopArticles()
-        }
-    }
-
-    val homeArticles:MutableLiveData<List<Article>> by lazy {
-        MutableLiveData<List<Article>>().also {
-            loadHomeArticles()
-        }
-    }
+    val topArticles:MutableLiveData<List<Article>> = MutableLiveData<List<Article>>()
+    val homeArticles:MutableLiveData<List<Article>> = MutableLiveData<List<Article>>()
 
     private val repository = RemoteRepository.instance
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
     private fun loadTopArticles() = launchUI {
-
-        println("loadTopArticles ............................. ")
         val response = repository.topArticles()
-        println("HomeViewModel response $response")
         val datas = response.data
-        println("loadTopArticles datas: $datas")
         topArticles.value = datas
     }
 
     private val page = AtomicInteger(0)
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
     public fun loadHomeArticles() = launchUI {
-        println("loadTopArticles ............................. ")
         val response = repository.homeArticles(page.getAndIncrement())
-        println("HomeViewModel response $response")
         val datas = response.data
         println("loadHomeArticles datas: $datas")
         topArticles.value = datas

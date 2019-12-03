@@ -24,7 +24,28 @@ class HomeFragment : BaseFragment<HomeViewModel>() {
 
     override fun providerViewModelClazz()=HomeViewModel::class.java
 
+    private lateinit var adapter:BottomRefreshAdapter<Article>
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        viewModel.topArticles.observe(this, Observer {
+            print("fragment!! $it")
+            adapter.extendDatas(it)
+        })
+
+        viewModel.homeArticles.observe(this, Observer {
+            print("fragment!! $it")
+            adapter.extendDatas(it)
+        })
+
+        lifecycle.addObserver(viewModel)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        lifecycle.removeObserver(viewModel)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,26 +59,16 @@ class HomeFragment : BaseFragment<HomeViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.topArticles.observe(viewLifecycleOwner, Observer {
-            print("HomeFragment viewLifeCycleOwner $it ")
-            print("HomeFragment BBBBBBBBB ${articles.adapter is BottomRefreshAdapter<*>}")
-            
-            (articles.adapter as BottomRefreshAdapter<Article>).beans?.addAll(it)
-        })
-
-        viewModel.topArticles.observe(activity!!, Observer {
-            print("activity!! $it")
-        })
-
-        viewModel.topArticles.observe(this, Observer {
-            print("fragment!! $it")
-        })
-
+        //TODO:ViewDataBinding
         articles.adapter = BottomRefreshAdapter.Builder<Article>(bindToView = { view, bean -> {
-            if (view is TextView) {
-                view.text = bean.title
-            }
-        }}, viewLayout = {viewType -> android.R.layout.simple_list_item_1}, onLoadData = { adapter -> { runBlocking {
+            println("adapter bindviuew bean $bean")
+            view.findViewById<TextView>(R.id.owner).text = bean.author ?: bean.shareUser
+            view.findViewById<TextView>(R.id.fresh).text = if (bean.fresh) "新" else ""
+            view.findViewById<TextView>(R.id.tag).text = bean.tags?.get(0)?.name ?: ""
+            view.findViewById<TextView>(R.id.date).text = bean.niceDate
+            view.findViewById<TextView>(R.id.title).text = bean.title
+            view.findViewById<TextView>(R.id.category).text = bean.superChapterName + bean.chapterName
+        }}, viewLayout = {viewType -> R.layout.home_article}, onLoadData = { adapter -> { runBlocking {
                 delay(2000)
                 viewModel.loadHomeArticles()
                 print("loading more ")
@@ -66,24 +77,26 @@ class HomeFragment : BaseFragment<HomeViewModel>() {
         clazz = Article::class.java, instance = object :BottomRefreshAdapter.InstanceBeansCallBack<Article> {
                 override fun instance(adapter: BottomRefreshAdapter<Article>) =
                     object :SortedListAdapterCallback<Article>(adapter) {
-                        override fun areItemsTheSame(item1: Article?, item2: Article?): Boolean {
-                            return false
+                        override fun areItemsTheSame(item1: Article, item2: Article): Boolean {
+                            return item1 == item2
                         }
 
                         override fun compare(o1: Article?, o2: Article?): Int {
-                            return 1
+                            return ((o1?.publishTime ?: 0) - (o2?.publishTime ?: 0)).toInt()
                         }
 
                         override fun areContentsTheSame(
                             oldItem: Article?,
                             newItem: Article?
                         ): Boolean {
-                            return false
+                            return oldItem?.title == newItem?.title
                         }
 
                     }
             })
-        .build()
+        .build().also {
+                adapter = it as BottomRefreshAdapter<Article>
+        }
 
         refresh_layout.setOnRefreshListener {
             refresh_layout.postDelayed(Runnable {
