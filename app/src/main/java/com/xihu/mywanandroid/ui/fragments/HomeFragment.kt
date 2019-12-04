@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.SortedListAdapterCallback
 import com.xihu.huidefeng.net.repository.RemoteRepository
 import com.xihu.mywanandroid.R
+import com.xihu.mywanandroid.databinding.HomeArticleBinding
 import com.xihu.mywanandroid.net.beans.Article
 import com.xihu.mywanandroid.ui.adapters.BottomRefreshAdapter
 import com.xihu.mywanandroid.ui.jetpack.viewmodels.HomeViewModel
@@ -24,18 +25,18 @@ class HomeFragment : BaseFragment<HomeViewModel>() {
 
     override fun providerViewModelClazz()=HomeViewModel::class.java
 
-    private lateinit var adapter:BottomRefreshAdapter<Article>
+    private lateinit var adapter:BottomRefreshAdapter<Article,HomeArticleBinding>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         viewModel.topArticles.observe(this, Observer {
-            print("fragment!! $it")
+            println("\ntopArticles fragment!! $it")
             adapter.extendDatas(it)
         })
 
         viewModel.homeArticles.observe(this, Observer {
-            print("fragment!! $it")
+            println("\nhomeArticles fragment!! $it")
             adapter.extendDatas(it)
         })
 
@@ -60,22 +61,14 @@ class HomeFragment : BaseFragment<HomeViewModel>() {
         super.onViewCreated(view, savedInstanceState)
 
         //TODO:ViewDataBinding
-        articles.adapter = BottomRefreshAdapter.Builder<Article>(bindToView = { view, bean -> {
-            println("adapter bindviuew bean $bean")
-            view.findViewById<TextView>(R.id.owner).text = bean.author ?: bean.shareUser
-            view.findViewById<TextView>(R.id.fresh).text = if (bean.fresh) "新" else ""
-            view.findViewById<TextView>(R.id.tag).text = bean.tags?.get(0)?.name ?: ""
-            view.findViewById<TextView>(R.id.date).text = bean.niceDate
-            view.findViewById<TextView>(R.id.title).text = bean.title
-            view.findViewById<TextView>(R.id.category).text = bean.superChapterName + bean.chapterName
-        }}, viewLayout = {viewType -> R.layout.home_article}, onLoadData = { adapter -> { runBlocking {
+        articles.adapter = BottomRefreshAdapter.Builder<Article,HomeArticleBinding>(viewLayout = {viewType -> R.layout.home_article}, onLoadData = { adapter -> { runBlocking {
                 delay(2000)
                 viewModel.loadHomeArticles()
                 print("loading more ")
             }
         } },
-        clazz = Article::class.java, instance = object :BottomRefreshAdapter.InstanceBeansCallBack<Article> {
-                override fun instance(adapter: BottomRefreshAdapter<Article>) =
+        clazz = Article::class.java, instance = object :BottomRefreshAdapter.InstanceBeansCallBack<Article,HomeArticleBinding> {
+                override fun instance(adapter: BottomRefreshAdapter<Article,HomeArticleBinding>) =
                     object :SortedListAdapterCallback<Article>(adapter) {
                         override fun areItemsTheSame(item1: Article, item2: Article): Boolean {
                             return item1 == item2
@@ -95,7 +88,7 @@ class HomeFragment : BaseFragment<HomeViewModel>() {
                     }
             })
         .build().also {
-                adapter = it as BottomRefreshAdapter<Article>
+                adapter = it as BottomRefreshAdapter<Article,HomeArticleBinding>
         }
 
         refresh_layout.setOnRefreshListener {

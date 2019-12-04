@@ -1,6 +1,6 @@
 package com.xihu.mywanandroid.net.beans
 
-data class Article(
+public data class Article(
 //    val audit:Int,
     val author:String,
     val shareUser:String,
@@ -26,4 +26,32 @@ data class Article(
         val name:String,
         val url:String
     )
+
+    public fun getOwnerName():String {
+        return if (!author.isNullOrEmpty()) author else shareUser
+    }
+
+    public fun getFreshText():String {
+        return if (fresh) "新" else ""
+    }
+
+    public fun getTagText():String {
+        return if (!tags.isEmpty()) tags[0].name else ""
+    }
+
+    public fun lastDate() = niceDate
+
+    public fun category():String {
+        var result = ""
+        if (!superChapterName.isNullOrEmpty()) {
+            result += superChapterName
+        }
+
+        if (!chapterName.isNullOrEmpty()) {
+            result += chapterName
+        }
+
+        return result
+    }
+
 }

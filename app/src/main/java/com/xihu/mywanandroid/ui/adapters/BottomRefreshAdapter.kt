@@ -4,6 +4,8 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SortedList
@@ -20,13 +22,13 @@ import java.security.InvalidParameterException
 * 3. 支持异步的数据加载
 *
 * */
-class BottomRefreshAdapter<T> private constructor(clazz: Class<T>, cb:InstanceBeansCallBack<T>): RecyclerView.Adapter<ViewHolder>() {
+class BottomRefreshAdapter<T, DB:ViewDataBinding> private constructor(clazz: Class<T>, cb:InstanceBeansCallBack<T, DB>): RecyclerView.Adapter<ViewHolder>() {
     private val FOOTER_VIEW_TAG = -1
     public var beans: SortedList<T>? = null
 
-    protected var onBindView: (view:View, bean:T) -> Unit = {view, bean ->  }
+    protected var onBindView: ((view:View, bean:T) -> Unit)?= null
     protected var onClickItemView: ((view:View, bean:T) -> Unit)?=null
-    protected var onLoadData: (suspend (adapter:BottomRefreshAdapter<T>) -> Unit)?=null
+    protected var onLoadData: (suspend (adapter:BottomRefreshAdapter<T,DB>) -> Unit)?=null
     protected var getViewType: (bean: T) -> Int = { bean -> 0 }
     protected var layoutResource: ((viewType:Int)->Int)?=null
 
@@ -38,14 +40,14 @@ class BottomRefreshAdapter<T> private constructor(clazz: Class<T>, cb:InstanceBe
         viewType: Int
     ): ViewHolder {
         val layout = if (viewType == FOOTER_VIEW_TAG) {
-            R.layout.bottomrefreshlayout
-        } else {
-            layoutResource?.invoke(viewType)
-        }
 
-        val view = LayoutInflater.from(parent.context)
-            .inflate(layout!!, parent, false)
-        return ViewHolder(view)
+            val databinding = DataBindingUtil.inflate<DB>(LayoutInflater.from(parent.context), R.layout.bottomrefreshlayout, parent, false)
+            return ViewHolder(databinding)
+        } else {
+
+            val databinding = DataBindingUtil.inflate<DB>(LayoutInflater.from(parent.context), layoutResource?.invoke(viewType)!!, parent, false)
+            return ViewHolder(databinding)
+        }
     }
 
     override fun onBindViewHolder(
@@ -53,7 +55,7 @@ class BottomRefreshAdapter<T> private constructor(clazz: Class<T>, cb:InstanceBe
         position: Int
     ) {
         if (position < beans!!.size()) {
-            onBindView?.invoke(holder.itemView, beans!![position])
+            onBindView?.invoke(holder.itemView, beans!![position]) ?: holder.bindr.setVariable(1, beans!![position])
             if (onClickItemView != null) {
                 holder.itemView.setOnClickListener {
                     onClickItemView?.invoke(
@@ -89,41 +91,33 @@ class BottomRefreshAdapter<T> private constructor(clazz: Class<T>, cb:InstanceBe
     }
 
     inline fun<reified B:T> extendDatas(beans: List<B>) {
-        print(">>>>>>>>>>>>>>>>>>>>>. $beans")
         this.beans!!.addAll(beans)
         notifyDataSetChanged()
     }
 
-    class Builder<B>(
+    class Builder<B,VB:ViewDataBinding>(
         clazz: Class<B>,
-        bindToView:((view:View, bean:B) -> Unit),
         viewLayout:((viewType:Int) -> Int),
-        onLoadData: (suspend (BottomRefreshAdapter<B>) -> Unit),
-        instance: InstanceBeansCallBack<B>
+        onLoadData: (suspend (BottomRefreshAdapter<B,VB>) -> Unit),
+        instance: InstanceBeansCallBack<B,VB>
 
     ) {
-        val adapter = BottomRefreshAdapter<B>(clazz, instance)
+        val adapter = BottomRefreshAdapter<B,VB>(clazz, instance)
 
         init {
             adapter.layoutResource = viewLayout
-            adapter.onBindView = bindToView
             adapter.onLoadData = onLoadData
         }
 
-        fun setDatas(beans: List<B>?): Builder<B> {
-            adapter.beans!!.addAll(beans!!)
-            return this
-        }
-
-        fun build(): BottomRefreshAdapter<*> {
+        fun build(): BottomRefreshAdapter<B,VB> {
             return adapter
         }
 
     }
 
     @FunctionalInterface
-    interface InstanceBeansCallBack<T> {
-        fun instance(adapter: BottomRefreshAdapter<T>): SortedListAdapterCallback<T>?
+    interface InstanceBeansCallBack<T,S:ViewDataBinding> {
+        fun instance(adapter: BottomRefreshAdapter<T,S>): SortedListAdapterCallback<T>?
     }
 
 }
