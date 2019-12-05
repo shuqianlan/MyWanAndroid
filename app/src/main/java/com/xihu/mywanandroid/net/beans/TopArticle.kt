@@ -1,6 +1,6 @@
 package com.xihu.mywanandroid.net.beans
 
-public data class Article(
+public data class TopArticle(
 //    val audit:Int,
     val author:String,
     val shareUser:String,
@@ -9,7 +9,7 @@ public data class Article(
     val collect:Boolean,
 //    val courseId:Int,
 //    val desc:String,
-//    val id:Long,
+    val id:Long,
     val niceDate: String,
     val publishTime:Long,
 //    val shareDate:Long,

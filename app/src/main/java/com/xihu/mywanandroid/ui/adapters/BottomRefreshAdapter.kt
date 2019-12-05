@@ -28,7 +28,7 @@ class BottomRefreshAdapter<T, DB:ViewDataBinding> private constructor(clazz: Cla
 
     protected var onBindView: ((view:View, bean:T) -> Unit)?= null
     protected var onClickItemView: ((view:View, bean:T) -> Unit)?=null
-    protected var onLoadData: (suspend (adapter:BottomRefreshAdapter<T,DB>) -> Unit)?=null
+    protected var onLoadData: (() -> Unit)?=null
     protected var getViewType: (bean: T) -> Int = { bean -> 0 }
     protected var layoutResource: ((viewType:Int)->Int)?=null
 
@@ -39,12 +39,10 @@ class BottomRefreshAdapter<T, DB:ViewDataBinding> private constructor(clazz: Cla
         parent: ViewGroup,
         viewType: Int
     ): ViewHolder {
-        val layout = if (viewType == FOOTER_VIEW_TAG) {
-
+        if (viewType == FOOTER_VIEW_TAG) {
             val databinding = DataBindingUtil.inflate<DB>(LayoutInflater.from(parent.context), R.layout.bottomrefreshlayout, parent, false)
             return ViewHolder(databinding)
         } else {
-
             val databinding = DataBindingUtil.inflate<DB>(LayoutInflater.from(parent.context), layoutResource?.invoke(viewType)!!, parent, false)
             return ViewHolder(databinding)
         }
@@ -55,6 +53,7 @@ class BottomRefreshAdapter<T, DB:ViewDataBinding> private constructor(clazz: Cla
         position: Int
     ) {
         if (position < beans!!.size()) {
+            println("Bean ${beans!![position]}")
             onBindView?.invoke(holder.itemView, beans!![position]) ?: holder.bindr.setVariable(1, beans!![position])
             if (onClickItemView != null) {
                 holder.itemView.setOnClickListener {
@@ -68,14 +67,14 @@ class BottomRefreshAdapter<T, DB:ViewDataBinding> private constructor(clazz: Cla
     }
 
     override fun getItemCount(): Int {
-        return beans!!.size() + 1
+        return beans!!.size() + if (isEnd) 0 else 1
     }
 
     override fun onViewAttachedToWindow(holder: ViewHolder) {
         super.onViewAttachedToWindow(holder)
         val viewtype = holder.itemViewType
-        if (viewtype == FOOTER_VIEW_TAG) {
-            GlobalScope.launch { onLoadData?.invoke(this@BottomRefreshAdapter) }
+        if ((viewtype == FOOTER_VIEW_TAG) and !isEnd) {
+            onLoadData?.invoke()
         }
     }
 
@@ -98,7 +97,7 @@ class BottomRefreshAdapter<T, DB:ViewDataBinding> private constructor(clazz: Cla
     class Builder<B,VB:ViewDataBinding>(
         clazz: Class<B>,
         viewLayout:((viewType:Int) -> Int),
-        onLoadData: (suspend (BottomRefreshAdapter<B,VB>) -> Unit),
+        onLoadData: (() -> Unit),
         instance: InstanceBeansCallBack<B,VB>
 
     ) {
@@ -120,4 +119,8 @@ class BottomRefreshAdapter<T, DB:ViewDataBinding> private constructor(clazz: Cla
         fun instance(adapter: BottomRefreshAdapter<T,S>): SortedListAdapterCallback<T>?
     }
 
+    private var isEnd = false
+    public fun setToEnd(isEnd:Boolean) {
+        this.isEnd = isEnd
+    }
 }

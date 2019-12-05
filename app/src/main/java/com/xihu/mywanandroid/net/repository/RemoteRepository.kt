@@ -3,9 +3,9 @@ package com.xihu.huidefeng.net.repository
 import com.xihu.huidefeng.net.api.ApiService
 import com.xihu.huidefeng.net.base.BaseRepository
 import com.xihu.huidefeng.net.beans.ResponseData
-import com.xihu.mywanandroid.net.beans.Article
+import com.xihu.mywanandroid.net.beans.TopArticle
 import com.xihu.mywanandroid.net.beans.ConfigBean
-import kotlinx.coroutines.delay
+import com.xihu.mywanandroid.net.beans.ListArticles
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -43,15 +43,15 @@ class RemoteRepository private constructor(): BaseRepository() {
 
     }
 
-    suspend fun topArticles():ResponseData<List<Article>> = request {
-        val response = apiService.topArticles()
-        print("topArticles ========== $response")
-        return@request response
+    suspend fun topArticles():ResponseData<List<TopArticle>> = request {
+        apiService.topArticles()
     }
 
-    suspend fun homeArticles(page:Int):ResponseData<List<Article>> = request {
-        val response = apiService.articles(page)
-        print("homeArticles ========== $response")
-        return@request response
+    suspend fun topBanners() = request {
+        apiService.topBanners()
+    }
+
+    suspend fun homeArticles(page:Int):ResponseData<ListArticles> = request {
+        apiService.articles(page)
     }
 }

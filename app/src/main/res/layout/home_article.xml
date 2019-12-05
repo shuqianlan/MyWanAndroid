@@ -6,7 +6,7 @@
     <data>
         <variable
             name="article"
-            type="com.xihu.mywanandroid.net.beans.Article" />
+            type="com.xihu.mywanandroid.net.beans.TopArticle" />
     </data>
 
     <androidx.cardview.widget.CardView
@@ -14,9 +14,10 @@
         android:layout_width="match_parent"
         android:layout_height="120dp"
         app:cardCornerRadius="4dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
+        android:layout_marginBottom="5dp"
         >
 
         <androidx.constraintlayout.widget.ConstraintLayout

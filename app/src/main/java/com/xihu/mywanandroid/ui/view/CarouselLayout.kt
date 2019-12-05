@@ -82,16 +82,11 @@ class CarouselLayout @JvmOverloads constructor(context: Context, attrs: Attribut
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        var width = 0
-        var height = 0
         for (index in 0 until childCount) {
             val child = getChildAt(index)
             measureChildWithMargins(child, widthMeasureSpec, 0, heightMeasureSpec, 0) // 测量子View的宽高
-            width = child.measuredWidth
-            height = child.measuredHeight
         }
-
-        setMeasuredDimension(width, height)
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
@@ -238,16 +233,24 @@ class CarouselLayout @JvmOverloads constructor(context: Context, attrs: Attribut
         return mAutoPlayAnimator != null || isAutoPlay
     }
 
+    fun autoPlay(auto:Boolean) {
+        isAutoPlay = true
+        autoPlay()
+    }
+
     fun autoPlay() {
         if (!isAutoPlay || childCount <= 1) {
             return
         }
+
+        println("-width $measuredWidth $width")
 
         mAutoPlayAnimator = ValueAnimator.ofInt(0, -width)
         mAutoPlayAnimator!!.startDelay = START_DELAY_TIME.toLong()
         mAutoPlayAnimator!!.duration = AUTO_DELAY_TIME.toLong()
         mAutoPlayAnimator!!.addUpdateListener { animation ->
             val animated = animation.animatedValue as Int
+            println("animated $animated")
             setChildrenTranslationX(animated.toFloat())
         }
         mAutoPlayAnimator!!.addListener(object : Animator.AnimatorListener {
@@ -334,8 +337,8 @@ class CarouselLayout @JvmOverloads constructor(context: Context, attrs: Attribut
     }
 
     interface OnScrollListener {
-        fun onScrollToEnd(index: Int)
-        fun onScrollTo(distanceX: Float, percent: Int, index: Int)
+        fun onScrollToEnd(index: Int) {}
+        fun onScrollTo(distanceX: Float, percent: Int, index: Int) {}
         fun callOnClick(index: Int, view: View)
     }
 

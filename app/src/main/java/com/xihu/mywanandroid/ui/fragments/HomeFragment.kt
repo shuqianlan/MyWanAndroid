@@ -3,49 +3,48 @@ package com.xihu.mywanandroid.ui.fragments
 
 import android.os.Bundle
 import android.view.*
-import android.widget.TextView
-import androidx.fragment.app.Fragment
+import android.widget.ImageView
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.SortedListAdapterCallback
-import com.xihu.huidefeng.net.repository.RemoteRepository
+import com.bumptech.glide.Glide
+import com.google.android.material.appbar.AppBarLayout
 import com.xihu.mywanandroid.R
 import com.xihu.mywanandroid.databinding.HomeArticleBinding
-import com.xihu.mywanandroid.net.beans.Article
+import com.xihu.mywanandroid.databinding.HomeBannerItemBinding
+import com.xihu.mywanandroid.net.beans.Banner
+import com.xihu.mywanandroid.net.beans.TopArticle
+import com.xihu.mywanandroid.ui.activities.BaseActivity
 import com.xihu.mywanandroid.ui.adapters.BottomRefreshAdapter
 import com.xihu.mywanandroid.ui.jetpack.viewmodels.HomeViewModel
+import com.xihu.mywanandroid.ui.view.CarouselLayout
 import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 
 class HomeFragment : BaseFragment<HomeViewModel>() {
 
     override fun providerViewModelClazz()=HomeViewModel::class.java
 
-    private lateinit var adapter:BottomRefreshAdapter<Article,HomeArticleBinding>
+    private lateinit var adapter:BottomRefreshAdapter<TopArticle,HomeArticleBinding>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         viewModel.topArticles.observe(this, Observer {
-            println("\ntopArticles fragment!! $it")
+            refresh_layout.isRefreshing = false
             adapter.extendDatas(it)
         })
 
         viewModel.homeArticles.observe(this, Observer {
-            println("\nhomeArticles fragment!! $it")
-            adapter.extendDatas(it)
+            adapter.extendDatas(it.datas)
+
+            if (it.over) {
+                adapter.setToEnd(true)
+            }
         })
 
-        lifecycle.addObserver(viewModel)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        lifecycle.removeObserver(viewModel)
+        viewModel.topBanners.observe(this, Observer {
+            fillBanners(it)
+        })
     }
 
     override fun onCreateView(
@@ -60,55 +59,73 @@ class HomeFragment : BaseFragment<HomeViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //TODO:ViewDataBinding
-        articles.adapter = BottomRefreshAdapter.Builder<Article,HomeArticleBinding>(viewLayout = {viewType -> R.layout.home_article}, onLoadData = { adapter -> { runBlocking {
-                delay(2000)
-                viewModel.loadHomeArticles()
-                print("loading more ")
-            }
-        } },
-        clazz = Article::class.java, instance = object :BottomRefreshAdapter.InstanceBeansCallBack<Article,HomeArticleBinding> {
-                override fun instance(adapter: BottomRefreshAdapter<Article,HomeArticleBinding>) =
-                    object :SortedListAdapterCallback<Article>(adapter) {
-                        override fun areItemsTheSame(item1: Article, item2: Article): Boolean {
+        (activity as BaseActivity)?.setSupportActionBar(toolbar)
+
+        carousel_cont.isNestedScrollingEnabled = false
+        app_bar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, offset ->
+            val scrollHeight = Math.abs(app_bar.height - toolbar.height)
+            val alpha = (Math.abs(offset)/1.0/scrollHeight*100).toInt()
+            toolbar.alpha = if (alpha >= 60) (alpha-60)*0.025.toFloat() else 0f
+        })
+
+        articles.adapter = BottomRefreshAdapter.Builder<TopArticle,HomeArticleBinding>(viewLayout = { viewType -> R.layout.home_article}, clazz = TopArticle::class.java, instance = object :BottomRefreshAdapter.InstanceBeansCallBack<TopArticle,HomeArticleBinding> {
+                override fun instance(adapter: BottomRefreshAdapter<TopArticle,HomeArticleBinding>) =
+                    object :SortedListAdapterCallback<TopArticle>(adapter) {
+                        override fun areItemsTheSame(item1: TopArticle, item2: TopArticle): Boolean {
                             return item1 == item2
                         }
 
-                        override fun compare(o1: Article?, o2: Article?): Int {
-                            return ((o1?.publishTime ?: 0) - (o2?.publishTime ?: 0)).toInt()
+                        override fun compare(o1: TopArticle, o2: TopArticle): Int {
+                            if (o1.fresh and o2.fresh)
+                                return (o2.publishTime - o1.publishTime).toInt()
+                            else if (o1.fresh) {
+                                return -1
+                            } else if (o2.fresh) {
+                                return 1
+                            }
+
+                            return (o2.publishTime - o1.publishTime).toInt()
                         }
 
                         override fun areContentsTheSame(
-                            oldItem: Article?,
-                            newItem: Article?
+                            oldItem: TopArticle?,
+                            newItem: TopArticle?
                         ): Boolean {
-                            return oldItem?.title == newItem?.title
+                            return oldItem?.id == newItem?.id
                         }
-
                     }
-            })
+            }, onLoadData = {viewModel.loadHomeArticles()})
         .build().also {
-                adapter = it as BottomRefreshAdapter<Article,HomeArticleBinding>
+            adapter = it
         }
 
         refresh_layout.setOnRefreshListener {
-            refresh_layout.postDelayed(Runnable {
-                viewModel.launchUI {
-                    println("refresh_layout start")
-//                    val response = RemoteRepository.instance.topArticles()
-//                    println("refresh_layout $response end")
-                }
-                refresh_layout.isRefreshing = false
-            }, 3000)
+            viewModel.loadTopArticles()
         }
+
+        carousel_cont.setOnScrollListener(object :CarouselLayout.OnScrollListener {
+            override fun callOnClick(index: Int, view: View) {
+                val tag = view.tag as Banner
+                println("callOnClick tag $tag")
+            }
+        })
     }
-
-
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_homes, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
+    private fun fillBanners(banners:List<Banner>) {
+        carousel_cont.removeAllViews()
 
+        for (index in 0 until banners.size) {
+            val viewBinding = DataBindingUtil.inflate<HomeBannerItemBinding>(LayoutInflater.from(context), R.layout.home_banner_item, carousel_cont, true)
+            viewBinding.banner = banners[index]
+            viewBinding.root.tag = banners[index]
+            Glide.with(this).load(banners[index].imagePath).into(viewBinding.bannerImg)
+        }
+
+        carousel_cont.autoPlay(true)
+    }
 }

@@ -1,11 +1,9 @@
 package com.xihu.mywanandroid.ui.fragments
 
 import android.os.Bundle
-import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.xihu.huidefeng.net.base.BaseViewModel
 
 abstract class BaseFragment<VM:BaseViewModel> : Fragment() {
@@ -23,8 +21,16 @@ abstract class BaseFragment<VM:BaseViewModel> : Fragment() {
                 print("Loading $it")
             })
         }
+
+        lifecycle.addObserver(viewModel)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        lifecycle.removeObserver(viewModel)
     }
 
     abstract fun providerViewModelClazz(): Class<VM>
+
 
 }
