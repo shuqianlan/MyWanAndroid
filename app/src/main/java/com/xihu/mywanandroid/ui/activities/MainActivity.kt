@@ -33,6 +33,7 @@ class MainActivity : BaseActivity() {
 
             currentNavController = controller
         }
+
     }
 
     override fun initData() {}

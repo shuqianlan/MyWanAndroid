@@ -1,6 +1,7 @@
 package com.xihu.mywanandroid.ui.fragments
 
 import android.os.Bundle
+import androidx.databinding.ObservableBoolean
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -8,6 +9,7 @@ import com.xihu.huidefeng.net.base.BaseViewModel
 
 abstract class BaseFragment<VM:BaseViewModel> : Fragment() {
     protected lateinit var viewModel:VM
+    val network_status = ObservableBoolean(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

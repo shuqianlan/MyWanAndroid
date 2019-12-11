@@ -12,30 +12,35 @@ open class BaseViewModel : ViewModel(), LifecycleObserver {
 
     private val error by lazy { MutableLiveData<Exception>() }
     private val loading by lazy { MutableLiveData<Boolean>() }
+    val error_state = MutableLiveData(false)
 
     fun launchUI(block: suspend CoroutineScope.()->Unit) = viewModelScope.launch {
         loading.value = true
         try {
-            withTimeoutOrNull(ConfigBean.instance.Retrofit.requestTimeout) { // 超时则抛出异常TimeoutCancellationException
-                print("wtf....")
+            // 超时则抛出异常TimeoutCancellationException
+            withTimeoutOrNull(ConfigBean.instance.Retrofit.requestTimeout) {
                 block() // 此处切换到线程池的上下文.
             }
+            error_state.value = false
         } catch (e: Exception) {
             onError()
+            println("exception: $e")
             error.value = e
+            error_state.value = true
+            println("now is here!")
         } finally {
             loading.value = false
         }
     }
 
     fun getError(): LiveData<Exception> {
-        print("Errordakd;ajfa")
         return error
     }
 
     fun loading(): LiveData<Boolean> {
         return loading
     }
+
 
     open fun onError() {}
 }

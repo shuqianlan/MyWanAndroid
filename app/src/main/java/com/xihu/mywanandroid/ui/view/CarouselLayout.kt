@@ -143,18 +143,24 @@ class CarouselLayout @JvmOverloads constructor(context: Context, attrs: Attribut
             isAutoPlay = false
             endAutoPlay()
         }
+
+        println("canTouchEvent $canTouchMove isAutoPlay $isAutoPlay")
         when (event.action) {
             MotionEvent.ACTION_DOWN -> touchX = event.x
             MotionEvent.ACTION_MOVE -> {
                 val currX = event.x
+                println("moveOffsetX ${currX - touchX}")
                 if (canTouchMove) {
                     setChildrenTranslationX(currX - touchX)
                 }
             }
             MotionEvent.ACTION_UP -> {
+                println("ACTION_UP ")
                 if (Math.abs(lastX - touchX) < MIN_TOUCHSLOP_DISTANCE) {
+                    println("end_to_callOnClick")
                     callOnClickView(middleView)
                 } else if (canTouchMove) {
+                    println("end_to_auto_align")
                     animeToEnd(lastX - touchX)
                 }
                 if (isAutoPlay()) {
@@ -190,6 +196,8 @@ class CarouselLayout @JvmOverloads constructor(context: Context, attrs: Attribut
         if (Math.abs(start) < MIN_TOUCHSLOP_DISTANCE) {
             return
         }
+
+        println("animeToEnd width $width")
         val end = (if (start > 0) width else -width).toFloat()
 
         mAutoAlignAnimator = ValueAnimator.ofFloat(start, end)
@@ -250,7 +258,6 @@ class CarouselLayout @JvmOverloads constructor(context: Context, attrs: Attribut
         mAutoPlayAnimator!!.duration = AUTO_DELAY_TIME.toLong()
         mAutoPlayAnimator!!.addUpdateListener { animation ->
             val animated = animation.animatedValue as Int
-            println("animated $animated")
             setChildrenTranslationX(animated.toFloat())
         }
         mAutoPlayAnimator!!.addListener(object : Animator.AnimatorListener {

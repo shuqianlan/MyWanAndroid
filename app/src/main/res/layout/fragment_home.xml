@@ -1,71 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.fragments.HomeFragment"
-    android:background="#F4F4F4"
-    >
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/app_bar"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        >
+    <data>
+        <import type="com.xihu.mywanandroid.ui.jetpack.viewmodels.HomeViewModel" />
+        <import type="com.xihu.mywanandroid.ui.fragments.HomeFragment" />
+        <variable
+            name="viewModel"
+            type="HomeViewModel" />
 
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            android:fitsSystemWindows="true"
-            app:contentScrim="@android:color/white"
-            app:scrimAnimationDuration="300"
-            app:titleEnabled="false"
-            app:toolbarId="@id/toolbar"
-            android:id="@+id/collapse_cont"
-            >
+        <variable
+            name="fragment"
+            type="HomeFragment" />
+    </data>
 
-            <com.xihu.mywanandroid.ui.view.CarouselLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:auto_play="false"
-                android:id="@+id/carousel_cont"
-                app:layout_collapseMode="parallax"
-                />
-
-            <androidx.appcompat.widget.Toolbar
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:id="@+id/toolbar"
-                android:layout_gravity="bottom"
-                app:layout_collapseMode="pin"
-                app:title="测试工具栏"
-                app:titleTextColor="@android:color/background_dark"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                />
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/refresh_layout"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        android:id="@+id/home_root_cont"
+        android:onClick="@{fragment::onRetryDatas}"
         >
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/articles"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        <include layout="@layout/content_fragment_home"
+            android:id="@+id/fragment_home_main_content"
+            app:isGone="@{viewModel.error_state ? true : !viewModel.onceLoading}"
             />
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/loading"
+            app:isGone="@{viewModel.error_state ? true : viewModel.onceLoading}"
+            android:layout_gravity="center"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+        <com.airbnb.lottie.LottieAnimationView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:id="@+id/lottile_view"
+            android:background="@android:color/background_dark"
+            app:isGone="@{viewModel.loading() ? true : !viewModel.error_state}"
+            app:layout_constraintWidth_percent="0.8"
+            app:layout_constraintDimensionRatio="H,1:1"
+            app:lottie_repeatMode="restart"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/err_state"
+            app:lottie_autoPlay="true"
+            android:focusable="false"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            app:isGone="@{viewModel.loading() ? true : !viewModel.error_state}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/lottile_view"
+            android:text="@string/content_err_infos"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:focusable="false"
+            android:layout_margin="20dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

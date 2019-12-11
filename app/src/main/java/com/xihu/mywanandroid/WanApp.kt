@@ -2,11 +2,12 @@ package com.xihu.mywanandroid
 
 import android.app.Application
 import com.google.gson.Gson
+//import com.growingio.android.sdk.collection.Configuration
+//import com.growingio.android.sdk.collection.GrowingIO
 import com.xihu.mywanandroid.net.beans.ConfigBean
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import java.lang.Exception
-import java.lang.StringBuilder
+
 
 class WanApp :Application() {
 
@@ -30,6 +31,14 @@ class WanApp :Application() {
         } catch (exp: Exception) {
             exp.printStackTrace()
         }
+
+//        GrowingIO.startWithConfiguration(
+//            this, Configuration()
+//                .trackAllFragments()
+//                .setTestMode(BuildConfig.DEBUG)
+//                .setDebugMode(BuildConfig.DEBUG)
+//                .setChannel("XXX应用商店")
+//        )
 
 
     }

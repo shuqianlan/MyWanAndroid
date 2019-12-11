@@ -1,22 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <variable
             name="banner"
             type="com.xihu.mywanandroid.net.beans.Banner" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/banner_cont"
+        >
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/banner_img"
             android:scaleType="centerCrop"
+            app:imageUrl="@{banner.imagePath}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -27,7 +31,8 @@
             android:layout_height="40dp"
             android:background="#AAF4F4F4"
             android:paddingHorizontal="20dp"
-            android:id="@+id/banner_title"
+            tools:text="LifeSmart"
+            android:textColor="@android:color/background_dark"
             app:layout_constraintBottom_toBottomOf="parent"
             android:text="@{banner.title}"
             android:gravity="left|center_vertical" />

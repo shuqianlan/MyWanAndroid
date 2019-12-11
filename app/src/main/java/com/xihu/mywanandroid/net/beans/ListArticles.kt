@@ -1,6 +1,6 @@
 package com.xihu.mywanandroid.net.beans
 
-class ListArticles(
+data class ListArticles(
     val curPage:Int,
     val offset: Int,
     val over:Boolean,
