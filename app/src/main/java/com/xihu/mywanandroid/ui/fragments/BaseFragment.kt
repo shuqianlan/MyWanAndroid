@@ -6,8 +6,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.xihu.huidefeng.net.base.BaseViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
 
-abstract class BaseFragment<VM:BaseViewModel> : Fragment() {
+abstract class BaseFragment<VM:BaseViewModel> : Fragment(), CoroutineScope by MainScope() {
     protected lateinit var viewModel:VM
     val network_status = ObservableBoolean(false)
 
@@ -30,6 +33,7 @@ abstract class BaseFragment<VM:BaseViewModel> : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         lifecycle.removeObserver(viewModel)
+        cancel()
     }
 
     abstract fun providerViewModelClazz(): Class<VM>

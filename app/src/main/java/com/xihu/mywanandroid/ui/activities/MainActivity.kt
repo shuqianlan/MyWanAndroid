@@ -7,6 +7,9 @@ import androidx.navigation.NavController
 import com.xihu.mywanandroid.R
 import com.xihu.mywanandroid.ui.jetpack.setupWithNavController
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 
 class MainActivity : BaseActivity() {
 
@@ -36,7 +39,8 @@ class MainActivity : BaseActivity() {
 
     }
 
-    override fun initData() {}
+    override fun initData() {
+    }
 
     override fun onNavigateUp(): Boolean {
         return currentNavController?.value?.navigateUp() ?: false
