@@ -51,4 +51,12 @@ class RemoteRepository private constructor(): BaseRepository() {
     suspend fun homeArticles(page:Int) = request {
         apiService.articles(page)
     }
+
+    suspend fun hotWebsites() = request {
+        apiService.hotWebsites()
+    }
+
+    suspend fun hotKeys() = request {
+        apiService.hotkeys()
+    }
 }
