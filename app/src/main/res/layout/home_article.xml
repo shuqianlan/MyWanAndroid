@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
 
     <data>
         <variable
             name="article"
-            type="com.xihu.mywanandroid.net.beans.TopArticle" />
+            type="com.xihu.mywanandroid.net.beans.Article" />
     </data>
 
     <androidx.cardview.widget.CardView
@@ -27,30 +29,55 @@
                 android:id="@+id/owner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{article.getOwnerName()}"
+                tools:text="Kotlin"
+                android:text="@{(article.author.length() != 0) ? article.author : article.shareUser}"
                 android:gravity="left|bottom"
                 app:layout_constraintBottom_toTopOf="@id/title"
                 app:layout_constraintStart_toStartOf="@id/title"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/fresh"
+                android:id="@+id/stick"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:text="@{article.getFreshText()}"
+                android:text='@{article.stick ? @string/stick : ""}'
                 android:gravity="left|bottom"
+                tools:text="置顶"
+                app:isGone="@{!article.stick}"
+                android:background="@drawable/background_border_top"
+                android:textColor="@color/color_red"
                 app:layout_constraintTop_toTopOf="@id/owner"
                 app:layout_constraintBottom_toBottomOf="@id/owner"
                 app:layout_constraintStart_toEndOf="@id/owner"
                 android:layout_marginLeft="6dp" />
 
             <TextView
-                android:id="@+id/tag"
+                android:id="@+id/fresh"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:text="@{article.getTagText()}"
+                android:text='@{article.fresh ? @string/fresh : ""}'
+                android:gravity="left|bottom"
+                tools:text="新"
+                app:isGone="@{!article.fresh}"
+                android:background="@drawable/background_border_fresh"
+                android:textColor="@color/color_pink"
+                app:layout_constraintTop_toTopOf="@id/owner"
+                app:layout_constraintBottom_toBottomOf="@id/owner"
+                app:layout_constraintStart_toEndOf="@id/stick"
+                android:layout_marginLeft="6dp" />
+
+            <TextView
+                android:id="@+id/tag"
+                tools:text="问答"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@{article.tags[0].name}"
+                android:textColor="@color/color_green"
+                app:isGone="@{article.tags[0].name.length == 0}"
+                android:background="@drawable/background_border_question"
                 android:gravity="left|bottom"
                 app:layout_constraintTop_toTopOf="@id/fresh"
                 app:layout_constraintBottom_toBottomOf="@id/fresh"
@@ -59,10 +86,11 @@
 
             <TextView
                 android:id="@+id/date"
+                tools:text="16小时前"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:text="@{article.lastDate()}"
+                android:text="@{article.niceDate}"
                 android:gravity="left|bottom"
                 android:layout_marginEnd="10dp"
                 app:layout_constraintTop_toTopOf="@id/fresh"
@@ -71,6 +99,7 @@
                 android:layout_marginLeft="6dp" />
 
             <TextView
+                tools:text="Kotlin☞协程"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/title"
@@ -82,10 +111,11 @@
                 app:layout_constraintEnd_toEndOf="parent" />
 
             <TextView
+                tools:text="Kotlin/协程"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/category"
-                android:text="@{article.category()}"
+                android:text='@{article.superChapterName + " / " + article.chapterName}'
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title"
                 app:layout_constraintStart_toStartOf="@id/title" />

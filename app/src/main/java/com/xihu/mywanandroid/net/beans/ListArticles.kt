@@ -7,5 +7,5 @@ data class ListArticles(
     val pageCount:Int,
     val size:Int,
     val total:Int,
-    val datas:List<TopArticle>
+    val datas:List<Article>
 )

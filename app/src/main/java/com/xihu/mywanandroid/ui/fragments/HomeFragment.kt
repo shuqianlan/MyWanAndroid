@@ -14,34 +14,31 @@ import com.xihu.mywanandroid.databinding.FragmentHomeBinding
 import com.xihu.mywanandroid.databinding.HomeArticleBinding
 import com.xihu.mywanandroid.databinding.HomeBannerItemBinding
 import com.xihu.mywanandroid.net.beans.Banner
-import com.xihu.mywanandroid.net.beans.TopArticle
+import com.xihu.mywanandroid.net.beans.Article
 import com.xihu.mywanandroid.ui.activities.BaseActivity
 import com.xihu.mywanandroid.ui.adapters.BottomRefreshAdapter
 import com.xihu.mywanandroid.ui.jetpack.viewmodels.HomeViewModel
 import com.xihu.mywanandroid.ui.view.CarouselLayout
 import kotlinx.android.synthetic.main.content_fragment_home.*
-import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment : BaseFragment<HomeViewModel>() {
 
     override fun providerViewModelClazz()=HomeViewModel::class.java
     var once = ObservableBoolean(true)
 
-    private lateinit var adapter:BottomRefreshAdapter<TopArticle,HomeArticleBinding>
+    private lateinit var adapter:BottomRefreshAdapter<Article,HomeArticleBinding>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         viewModel.topArticles.observe(this, Observer {
             refresh_layout.isRefreshing = false
-            println("topArticles_observ $it")
             adapter.extendDatas(it)
         })
 
         viewModel.homeArticles.observe(this, Observer {
             adapter.extendDatas(it.datas)
 
-            println("homeArticles_observ $it")
             if (it.over) {
                 adapter.setToEnd(true)
             }
@@ -61,6 +58,7 @@ class HomeFragment : BaseFragment<HomeViewModel>() {
         val binder = DataBindingUtil.bind<FragmentHomeBinding>(view)
         binder?.viewModel = viewModel
         binder?.lifecycleOwner = viewLifecycleOwner
+        binder?.fragment = this
         return view
     }
 
@@ -76,27 +74,27 @@ class HomeFragment : BaseFragment<HomeViewModel>() {
             toolbar.alpha = if (alpha >= 60) (alpha-60)*0.025.toFloat() else 0f
         })
 
-        articles.adapter = BottomRefreshAdapter.Builder<TopArticle,HomeArticleBinding>(viewLayout = { _ -> R.layout.home_article}, clazz = TopArticle::class.java, instance = object :BottomRefreshAdapter.InstanceBeansCallBack<TopArticle,HomeArticleBinding> {
-                override fun instance(adapter: BottomRefreshAdapter<TopArticle,HomeArticleBinding>) =
-                    object :SortedListAdapterCallback<TopArticle>(adapter) {
-                        override fun areItemsTheSame(item1: TopArticle, item2: TopArticle): Boolean {
+        articles.adapter = BottomRefreshAdapter.Builder<Article,HomeArticleBinding>(viewLayout = { _ -> R.layout.home_article}, clazz = Article::class.java, instance = object :BottomRefreshAdapter.InstanceBeansCallBack<Article,HomeArticleBinding> {
+                override fun instance(adapter: BottomRefreshAdapter<Article,HomeArticleBinding>) =
+                    object :SortedListAdapterCallback<Article>(adapter) {
+                        override fun areItemsTheSame(item1: Article, item2: Article): Boolean {
                             return item1 == item2
                         }
 
-                        override fun compare(o1: TopArticle, o2: TopArticle) =
-                            if (o1.fresh and o2.fresh)
+                        override fun compare(o1: Article, o2: Article) =
+                            if (o1.stick and o2.stick)
                                 (o2.publishTime - o1.publishTime).toInt()
-                            else if (o1.fresh) {
+                            else if (o1.stick) {
                                 -1
-                            } else if (o2.fresh) {
+                            } else if (o2.stick) {
                                 1
                             } else {
                                 (o2.publishTime - o1.publishTime).toInt()
                             }
 
                         override fun areContentsTheSame(
-                            oldItem: TopArticle?,
-                            newItem: TopArticle?
+                            oldItem: Article?,
+                            newItem: Article?
                         ): Boolean {
                             return oldItem?.id == newItem?.id
                         }
@@ -151,8 +149,7 @@ class HomeFragment : BaseFragment<HomeViewModel>() {
 
     }
 
-    fun onRetryDatas(view:View):Unit {
-        println("\n ======================== onRetryDatas ")
+    fun onRetryDatas(view:View) {
         viewModel.loadHomeItems()
     }
 

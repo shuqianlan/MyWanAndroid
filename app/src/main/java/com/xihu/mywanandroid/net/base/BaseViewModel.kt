@@ -12,16 +12,16 @@ open class BaseViewModel : ViewModel(), LifecycleObserver {
 
     private val error by lazy { MutableLiveData<Exception>() }
     private val loading by lazy { MutableLiveData<Boolean>() }
-    val error_state = MutableLiveData(false)
+    val error_state = MutableLiveData(false) // 是否异常
 
     fun launchUI(block: suspend CoroutineScope.()->Unit) = viewModelScope.launch {
         loading.value = true
+        error_state.value = false
         try {
             // 超时则抛出异常TimeoutCancellationException
             withTimeoutOrNull(ConfigBean.instance.Retrofit.requestTimeout) {
                 block() // 此处切换到线程池的上下文.
             }
-            error_state.value = false
         } catch (e: Exception) {
             onError()
             println("exception: $e")

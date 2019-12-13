@@ -3,16 +3,11 @@ package com.xihu.mywanandroid.ui.view
 import android.animation.Animator
 import android.animation.ValueAnimator
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Canvas
-import android.graphics.Paint
+import android.graphics.*
 import android.util.AttributeSet
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewConfiguration
-import android.view.ViewGroup
+import android.view.*
 import com.xihu.mywanandroid.R
+import kotlin.math.floor
 
 /*
 * 功能支持:
@@ -31,7 +26,7 @@ class CarouselLayout @JvmOverloads constructor(context: Context, attrs: Attribut
     private var AUTO_DELAY_TIME = 600
 
     private var isCanTouchMove = true // 是否允许滑动
-    private var isAutoPlay = true // 是否允许滑动
+    private var isAutoPlay = true // 是否自动播放
     private var once = true
 
     private var mAutoAlignAnimator: ValueAnimator? = null // 滑动松手后自动对齐的动画
@@ -40,13 +35,14 @@ class CarouselLayout @JvmOverloads constructor(context: Context, attrs: Attribut
     private val bitmapPaint: Paint
     private val selected: Bitmap
     private val unSelected: Bitmap
+    private var mFullWidth = 0 // 宽度撑满
 
     private var index = 0
 
     private var listener: OnScrollListener? = null
 
     private val middleIndex: Int
-        get() = Math.floor(childCount / 2.0 + 0.05).toInt()
+        get() = floor(childCount / 2.0 + 0.05).toInt()
 
     private val middleView: View
         get() {
@@ -55,7 +51,9 @@ class CarouselLayout @JvmOverloads constructor(context: Context, attrs: Attribut
         }
 
     init {
-        MIN_TOUCHSLOP_DISTANCE = ViewConfiguration.get(context).scaledTouchSlop.toFloat()
+        val configuration = ViewConfiguration.get(context)
+        MIN_TOUCHSLOP_DISTANCE = configuration.scaledTouchSlop.toFloat()
+
         index = middleIndex
 
         bitmapPaint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -79,14 +77,24 @@ class CarouselLayout @JvmOverloads constructor(context: Context, attrs: Attribut
         }
 
         post(runnable)
+
+        val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val point = Point();
+        wm.getDefaultDisplay().getRealSize(point);
+        mFullWidth = point.x;
+
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val width = MeasureSpec.getSize(widthMeasureSpec)
+        val height = MeasureSpec.getSize(heightMeasureSpec)
+
         for (index in 0 until childCount) {
             val child = getChildAt(index)
             measureChildWithMargins(child, widthMeasureSpec, 0, heightMeasureSpec, 0) // 测量子View的宽高
         }
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+
+        setMeasuredDimension(width, height)
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
@@ -111,7 +119,6 @@ class CarouselLayout @JvmOverloads constructor(context: Context, attrs: Attribut
         }
     }
 
-    // 绘制完子View后 绘制点数
     override fun dispatchDraw(canvas: Canvas) {
         super.dispatchDraw(canvas)
 
@@ -251,9 +258,9 @@ class CarouselLayout @JvmOverloads constructor(context: Context, attrs: Attribut
             return
         }
 
-        println("-width $measuredWidth $width")
+        println("-width $measuredWidth $width $mFullWidth")
 
-        mAutoPlayAnimator = ValueAnimator.ofInt(0, -width)
+        mAutoPlayAnimator = ValueAnimator.ofInt(0, -mFullWidth)
         mAutoPlayAnimator!!.startDelay = START_DELAY_TIME.toLong()
         mAutoPlayAnimator!!.duration = AUTO_DELAY_TIME.toLong()
         mAutoPlayAnimator!!.addUpdateListener { animation ->
@@ -270,7 +277,7 @@ class CarouselLayout @JvmOverloads constructor(context: Context, attrs: Attribut
             override fun onAnimationEnd(animation: Animator) {
                 end=System.currentTimeMillis()
                 if (isAutoPlay) {
-                    exchange((-width).toFloat())
+                    exchange((-mFullWidth).toFloat())
                     restartAutoPlay()
                 }
             }

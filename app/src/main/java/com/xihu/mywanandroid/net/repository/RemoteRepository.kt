@@ -2,10 +2,7 @@ package com.xihu.huidefeng.net.repository
 
 import com.xihu.huidefeng.net.api.ApiService
 import com.xihu.huidefeng.net.base.BaseRepository
-import com.xihu.huidefeng.net.beans.ResponseData
-import com.xihu.mywanandroid.net.beans.TopArticle
 import com.xihu.mywanandroid.net.beans.ConfigBean
-import com.xihu.mywanandroid.net.beans.ListArticles
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -43,7 +40,7 @@ class RemoteRepository private constructor(): BaseRepository() {
 
     }
 
-    suspend fun topArticles():ResponseData<List<TopArticle>> = request {
+    suspend fun topArticles() = request {
         apiService.topArticles()
     }
 
@@ -51,7 +48,7 @@ class RemoteRepository private constructor(): BaseRepository() {
         apiService.topBanners()
     }
 
-    suspend fun homeArticles(page:Int):ResponseData<ListArticles> = request {
+    suspend fun homeArticles(page:Int) = request {
         apiService.articles(page)
     }
 }

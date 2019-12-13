@@ -3,7 +3,7 @@ package com.xihu.huidefeng.net.api
 import com.xihu.huidefeng.net.beans.*
 import com.xihu.mywanandroid.net.beans.Banner
 import com.xihu.mywanandroid.net.beans.ListArticles
-import com.xihu.mywanandroid.net.beans.TopArticle
+import com.xihu.mywanandroid.net.beans.Article
 import retrofit2.http.*
 
 interface ApiService {
@@ -13,7 +13,7 @@ interface ApiService {
 
     // 置顶
     @GET("article/top/json")
-    suspend fun topArticles():ResponseData<List<TopArticle>>
+    suspend fun topArticles():ResponseData<List<Article>>
 
     // 分页数据
     @GET("article/list/{page}/json")
