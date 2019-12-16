@@ -7,6 +7,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.Observer
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.SortedListAdapterCallback
 import com.google.android.material.appbar.AppBarLayout
 import com.xihu.mywanandroid.R
@@ -16,9 +17,11 @@ import com.xihu.mywanandroid.databinding.HomeBannerItemBinding
 import com.xihu.mywanandroid.net.beans.Banner
 import com.xihu.mywanandroid.net.beans.Article
 import com.xihu.mywanandroid.ui.activities.BaseActivity
+import com.xihu.mywanandroid.ui.activities.MainActivity
 import com.xihu.mywanandroid.ui.adapters.BottomRefreshAdapter
 import com.xihu.mywanandroid.ui.jetpack.viewmodels.HomeViewModel
 import com.xihu.mywanandroid.ui.view.CarouselLayout
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_fragment_home.*
 
 class HomeFragment : BaseFragment<HomeViewModel>() {
@@ -130,8 +133,47 @@ class HomeFragment : BaseFragment<HomeViewModel>() {
 //        }
     }
 
+    override fun onStart() {
+        println("HomeFragment onStart ...") // 又来
+        super.onStart()
+    }
+
+    override fun onPause() {
+        println("HomeFragment onPause ...")
+        super.onPause()
+    }
+
+    override fun onStop() {
+        println("HomeFragment onStop ...")
+        super.onStop()
+    }
+
+    override fun onDestroy() {
+        println("HomeFragment onDestroy ...")
+        super.onDestroy()
+    }
+
+    override fun onDestroyView() {
+        println("HomeFragment onDestroyView ...")
+        super.onDestroyView()
+    }
+
+    override fun onDetach() {
+        println("HomeFragment onDetach ...")
+        super.onDetach()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_homes, menu)
+
+        toolbar.setOnMenuItemClickListener {
+            if (it.itemId == R.id.search) {
+//                (activity as MainActivity).bottom_navigation.visibility = View.GONE
+                Navigation.findNavController(toolbar).navigate(R.id.action_navigation_home_to_searchFragment)
+            }
+            return@setOnMenuItemClickListener true
+        }
+
         super.onCreateOptionsMenu(menu, inflater)
     }
 

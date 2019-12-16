@@ -98,12 +98,10 @@ fun BottomNavigationView.setupWithNavController(
         } else {
             
             val newlySelectedItemTag = graphIdToTagMap[item.itemId]
-            println("itemId=${item.itemId};newlySelectedItemTag=$newlySelectedItemTag")
             if (selectedItemTag != newlySelectedItemTag) {
-                // Pop everything above the first fragment (the "fixed start destination")
-                println("Stack_CountSize:${fragmentManager.backStackEntryCount}")
-                fragmentManager.popBackStack(firstFragmentTag,
-                    FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                // Pop everything above the first fragment (the "fixed start destination"), 返回栈清空
+                fragmentManager.popBackStack(firstFragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                println("fragmentManager.stackChildCount: ${fragmentManager.backStackEntryCount}")
                 val selectedFragment = fragmentManager.findFragmentByTag(newlySelectedItemTag)
                     as NavHostFragment
 
@@ -142,6 +140,7 @@ fun BottomNavigationView.setupWithNavController(
     }
 
     // Optional: on item reselected, pop back stack to the destination of the graph
+    // 点击后回到navigation的StartDestion
     setupItemReselected(graphIdToTagMap, fragmentManager)
 
     // Handle deep link
@@ -156,7 +155,9 @@ fun BottomNavigationView.setupWithNavController(
         // Reset the graph if the currentDestination is not valid (happens when the back
         // stack is popped after using the back button).
         selectedNavController.value?.let { controller ->
+            println("isBackStackEmpty ${controller.getCurrentDestination()}")
             if (controller.currentDestination == null) {
+                println("Top is Now")
                 controller.navigate(controller.graph.id)
             }
         }

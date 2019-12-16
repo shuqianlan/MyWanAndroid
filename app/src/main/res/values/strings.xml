@@ -14,4 +14,8 @@
 
     <string name="stick">置顶</string>
     <string name="fresh">新</string>
+    <string name="search_history">搜索历史</string>
+    <string name="search_clear">清空</string>
+    <string name="search_hot_tips">热门搜索</string>
+    <string name="search_hint">请输入....</string>
 </resources>

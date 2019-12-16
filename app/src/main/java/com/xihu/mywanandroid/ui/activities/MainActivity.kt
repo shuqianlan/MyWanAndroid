@@ -1,15 +1,14 @@
 package com.xihu.mywanandroid.ui.activities
 
+import android.content.res.Resources.NotFoundException
 import android.os.Bundle
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import com.xihu.mywanandroid.R
 import com.xihu.mywanandroid.ui.jetpack.setupWithNavController
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
 
 class MainActivity : BaseActivity() {
 
@@ -37,12 +36,19 @@ class MainActivity : BaseActivity() {
             currentNavController = controller
         }
 
+        try {
+            println("ResourceName ${this.getResources().getResourceName(R.navigation.bottom_nav_proj)}")
+        } catch (e: NotFoundException) {
+        }
+
     }
 
     override fun initData() {
     }
 
+    // 返回是在FragmentNavigator中处理
     override fun onNavigateUp(): Boolean {
+        println("onNavigateUp() ：。。。。。。。。。。。。。。。")
         return currentNavController?.value?.navigateUp() ?: false
     }
 }
