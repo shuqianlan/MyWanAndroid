@@ -66,10 +66,11 @@
             android:gravity="left|center_vertical"
             android:padding="10dp" />
 
-        <androidx.cardview.widget.CardView
+        <com.xihu.mywanandroid.ui.view.TagSelectionView
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:id="@+id/tagSelectionView" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
