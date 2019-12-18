@@ -22,4 +22,7 @@ interface ApiService {
     @GET("hotkey/json") // 热词
     suspend fun hotkeys():ResponseData<List<Hotkey>>
 
+    @FormUrlEncoded
+    @POST("article/query/0/json")
+    suspend fun searchKey(@Field("k") word: String):ResponseData<Any>
 }

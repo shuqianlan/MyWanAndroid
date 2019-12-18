@@ -59,4 +59,8 @@ class RemoteRepository private constructor(): BaseRepository() {
     suspend fun hotKeys() = request {
         apiService.hotkeys()
     }
+
+    suspend fun searchKey(word:String) = request {
+        apiService.searchKey(word = word)
+    }
 }

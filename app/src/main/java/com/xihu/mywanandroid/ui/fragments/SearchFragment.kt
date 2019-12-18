@@ -1,4 +1,4 @@
-package com.xihu.mywanandroid
+package com.xihu.mywanandroid.ui.fragments
 
 
 import android.os.Bundle
@@ -9,14 +9,16 @@ import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import com.xihu.mywanandroid.R
 import com.xihu.mywanandroid.databinding.FragmentSearchBinding
 import com.xihu.mywanandroid.databinding.SearchHistoryItemBinding
 import com.xihu.mywanandroid.net.beans.Hotkey
 import com.xihu.mywanandroid.net.beans.SearchKey
+import com.xihu.mywanandroid.ui.activities.MainActivity
 import com.xihu.mywanandroid.ui.adapters.ViewHolder
-import com.xihu.mywanandroid.ui.fragments.BaseFragment
 import com.xihu.mywanandroid.ui.jetpack.viewmodels.SearchViewModel
 import com.xihu.mywanandroid.ui.view.TagSelectionView
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_search.*
 
 class SearchFragment : BaseFragment<SearchViewModel>() {
@@ -86,11 +88,16 @@ class SearchFragment : BaseFragment<SearchViewModel>() {
     }
 
     fun onNavigationUp(view:View) {
+        (activity as MainActivity).bottom_navigation.visibility = View.VISIBLE
         Navigation.findNavController(navbar_back).navigateUp()
     }
 
     fun onSearchKey(view:View) {
-        val searchKey = search_value.text
+        val searchKey = search_value.text.toString()
         println("searchKey: $searchKey")
+
+        Navigation.findNavController(view).navigate(R.id.action_searchFragment_to_searchResultFragment, Bundle().also {
+            it.putString(SearchResultFragment.SEARCHKEY, searchKey)
+        })
     }
 }

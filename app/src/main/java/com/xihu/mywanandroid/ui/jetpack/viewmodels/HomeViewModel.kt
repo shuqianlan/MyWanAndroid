@@ -42,14 +42,10 @@ class HomeViewModel : BaseViewModel() {
         onceLoading.value = false
         coroutineScope {
             async {
-                val articles = repository.topArticles().data.also {
-                    for (item in it) {
-                        item.stick = true
-                    }
-                }
-
-                println("Home_Top_Articles: $articles")
-                topArticles.value = articles
+                topArticles.value = repository.topArticles().data.asSequence().map {
+                    it.stick = true
+                    it
+                }.toList()
             }
 
             async {
