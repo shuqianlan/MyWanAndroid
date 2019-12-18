@@ -20,7 +20,6 @@ class HomeViewModel : BaseViewModel() {
     val topBanners = MutableLiveData<List<Banner>>()
     val onceLoading = MutableLiveData<Boolean>(false)
 
-    private val repository = RemoteRepository.instance
     fun loadTopArticles() = launchUI {
         val response = repository.topArticles()
         topArticles.value = response.data

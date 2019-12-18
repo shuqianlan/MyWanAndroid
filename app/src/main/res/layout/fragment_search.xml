@@ -49,6 +49,7 @@
                 android:scaleY="0.8"
                 android:scaleX="0.8"
                 android:layout_marginHorizontal="10dp"
+                android:onClick="@{searchFragment::onSearchKey}"
                 android:src="@drawable/navbar_search" />
 
         </LinearLayout>

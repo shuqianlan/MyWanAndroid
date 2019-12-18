@@ -10,48 +10,49 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cont"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
-        android:id="@+id/cont"
-        android:descendantFocusability="afterDescendants"
-        >
+        android:descendantFocusability="afterDescendants">
 
         <TextView
+            android:id="@+id/textView"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
-            android:singleLine="true"
-            tools:text="雪中悍刀行"
-            android:textSize="16sp"
-            android:text="@{key}"
             android:layout_marginLeft="10dp"
             android:gravity="left|center_vertical"
+            android:singleLine="true"
+            android:text="@{key}"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/clear"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            />
+            tools:text="雪中悍刀行" />
 
         <ImageView
+            android:id="@+id/clear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:scaleType="centerInside"
-            android:src="@drawable/clear"
             android:padding="10dp"
-            android:scaleY="0.6"
+            android:scaleType="centerInside"
             android:scaleX="0.6"
-            android:id="@+id/clear"
-            app:layout_constraintTop_toTopOf="parent"
+            android:scaleY="0.6"
+            android:src="@drawable/clear"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            />
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/textView"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="2px"
-            android:background="@android:color/darker_gray"
-            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginLeft="10dp"
-            />
+            android:background="@android:color/darker_gray"
+            app:layout_constraintBottom_toBottomOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

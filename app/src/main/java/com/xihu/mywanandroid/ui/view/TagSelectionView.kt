@@ -11,11 +11,13 @@ import com.xihu.mywanandroid.BuildConfig
 import com.xihu.mywanandroid.R
 
 class TagSelectionView :ViewGroup {
-    private val text_tags = listOf(
-        "剑来", "雪中悍刀行", "飞升之后", "妖神记", "神墓", "完美世界", "将夜",
-        "原始战记", "回到过去变成猫", "未来天王", "大师兄贼稳健", "蛮荒速成流",
-        "carousel_cont.setOnScrollListener(object :CarouselLayout.OnScrollListener"
-    )
+    companion object {
+        val text_tags = listOf(
+            "剑来", "雪中悍刀行", "飞升之后", "妖神记", "神墓", "完美世界", "将夜",
+            "原始战记", "回到过去变成猫", "未来天王", "大师兄贼稳健", "蛮荒速成流",
+            "carousel_cont.setOnScrollListener(object :CarouselLayout.OnScrollListener"
+        )
+    }
 
     private var tagListener:OnTagClickListener?=null
     constructor(context: Context?) : this(context, null)
@@ -26,19 +28,6 @@ class TagSelectionView :ViewGroup {
         defStyleAttr
     ) {
 
-        if (BuildConfig.DEBUG) {
-            post {
-                text_tags.forEachIndexed { _, s ->
-                    LayoutInflater.from(context).inflate(R.layout.tag_selection_item, this, false).also {
-                        if (it is TextView) {
-                            it.text = s
-                            it.tag = s
-                        }
-                        addView(it)
-                    }
-                }
-            }
-        }
     }
 
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -66,7 +55,7 @@ class TagSelectionView :ViewGroup {
             val rows = sumChildsWidth / width + if (sumChildsWidth % width == 0) 0 else 1
             val child = getChildAt(0)
             val lp = child.layoutParams as MarginLayoutParams
-            heightSize = if (heightMode == MeasureSpec.EXACTLY) heightSize else rows * (child.measuredHeight + lp.topMargin + lp.bottomMargin)
+            heightSize = if (heightMode == MeasureSpec.EXACTLY) heightSize else rows * (child.measuredHeight + lp.topMargin + lp.bottomMargin) + lp.topMargin
         }
         setMeasuredDimension(width, heightSize)
     }
@@ -84,7 +73,9 @@ class TagSelectionView :ViewGroup {
             if (child is TextView) {
                 val childHeight = child.measuredHeight
                 val lp = child.layoutParams as MarginLayoutParams
-                val childWidth = if(child.measuredWidth > width) {
+
+                val wrapWidth = child.paint.measureText(child.text.toString())
+                val childWidth = if(wrapWidth > width) {
                     child.text = measureMaxWidth(child.text.toString())
                     width
                 } else {
@@ -96,9 +87,9 @@ class TagSelectionView :ViewGroup {
                     rows++
                 }
 
-                println("text: ${child.text}")
-                val y = rows * childHeight + rows*lp.topMargin + if (rows > 0) rows*lp.bottomMargin else 0
+                val y = rows * childHeight + (rows+1)*lp.topMargin + rows*lp.bottomMargin
                 offsetX += lp.leftMargin
+
                 child.layout(offsetX, y, offsetX + childWidth, y + childHeight)
                 offsetX += childWidth + lp.rightMargin
             }
@@ -108,7 +99,7 @@ class TagSelectionView :ViewGroup {
     }
 
     private fun measureMaxWidth(text:String):String {
-        var realWidth = width //- GapLT * 2
+        var realWidth = width
 
         var step = 0
         var child_measure_width = 0
@@ -182,4 +173,16 @@ class TagSelectionView :ViewGroup {
         }
     }
 
+    fun setTags(tags:List<String>, bean:List<Any>) {
+        tags.forEachIndexed { index, s ->
+            LayoutInflater.from(context).inflate(R.layout.tag_selection_item, this, false).also {
+                if (it is TextView) {
+                    it.setSingleLine() // 保证为单行，
+                    it.text = s
+                    it.tag = bean[index]
+                }
+                addView(it)
+            }
+        }
+    }
 }

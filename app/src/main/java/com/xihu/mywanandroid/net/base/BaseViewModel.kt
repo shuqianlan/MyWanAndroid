@@ -1,6 +1,7 @@
 package com.xihu.huidefeng.net.base
 
 import androidx.lifecycle.*
+import com.xihu.huidefeng.net.repository.RemoteRepository
 import com.xihu.mywanandroid.net.beans.ConfigBean
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -13,6 +14,11 @@ open class BaseViewModel : ViewModel(), LifecycleObserver {
     private val error by lazy { MutableLiveData<Exception>() }
     private val loading by lazy { MutableLiveData<Boolean>() }
     val error_state = MutableLiveData(false) // 是否异常
+    protected val repository:RemoteRepository
+
+    init {
+        repository = RemoteRepository.instance
+    }
 
     fun launchUI(block: suspend CoroutineScope.()->Unit) = viewModelScope.launch {
         loading.value = true

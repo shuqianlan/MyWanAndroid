@@ -16,10 +16,10 @@ interface ApiService {
     @GET("article/list/{page}/json") // 分页数据
     suspend fun articles(@Path("page") page:Int):ResponseData<ListArticles>
 
-    @GET("article/friend/json") // 常用网站
+    @GET("friend/json") // 常用网站
     suspend fun hotWebsites():ResponseData<List<Website>>
 
-    @GET("article/hotkey/json") // 热词
+    @GET("hotkey/json") // 热词
     suspend fun hotkeys():ResponseData<List<Hotkey>>
 
 }

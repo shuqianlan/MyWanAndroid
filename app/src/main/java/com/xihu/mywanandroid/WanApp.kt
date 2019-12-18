@@ -1,6 +1,7 @@
 package com.xihu.mywanandroid
 
 import android.app.Application
+import android.content.Context
 import com.google.gson.Gson
 //import com.growingio.android.sdk.collection.Configuration
 //import com.growingio.android.sdk.collection.GrowingIO
@@ -11,10 +12,13 @@ import java.io.InputStreamReader
 
 class WanApp :Application() {
 
+    companion object {
+        lateinit var context:Context
+    }
     override fun onCreate() {
         super.onCreate()
 
-        val context = applicationContext
+        context = applicationContext
         val reader = InputStreamReader(context.assets.open("config.json"), "UTF-8")
         reader.read()
         val bufferedReader = BufferedReader(reader)
