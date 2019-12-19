@@ -13,7 +13,7 @@
 
     <ProgressBar
         android:layout_width="match_parent"
-        android:layout_height="10dp"
+        android:layout_height="2dp"
         android:id="@+id/loading"
         style="@android:style/Widget.Holo.ProgressBar.Horizontal"
         android:layout_gravity="bottom"

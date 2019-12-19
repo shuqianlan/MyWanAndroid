@@ -105,7 +105,7 @@
                 android:id="@+id/title"
                 android:gravity="left|center_vertical"
                 android:layout_marginHorizontal="10dp"
-                android:text="@{article.title}"
+                android:text="@{article.title.toString()}"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />

@@ -79,7 +79,6 @@ class BottomRefreshAdapter<T, DB:ViewDataBinding> private constructor(clazz: Cla
 
     inline fun<reified B:T> extendDatas(beans: List<B>) {
         this.beans!!.addAll(beans)
-        notifyDataSetChanged()
     }
 
     class Builder<B,VB:ViewDataBinding>(
