@@ -84,15 +84,10 @@ fun BottomNavigationView.setupWithNavController(
     val firstFragmentTag = graphIdToTagMap[firstFragmentGraphId]
     var isOnFirstFragment = selectedItemTag == firstFragmentTag
 
-    print("selectedItemTag $selectedItemTag")
-    print("firstFragmentTag $firstFragmentTag")
-    print("isOnFirstFragment $isOnFirstFragment")
-
     // When a navigation item is selected
     setOnNavigationItemSelectedListener { item ->
         // Don't do anything if the state is state has already been saved.
 
-        println("fragmentManager.isStateSaved ${fragmentManager.isStateSaved}")
         if (fragmentManager.isStateSaved) {
             false
         } else {
@@ -101,7 +96,6 @@ fun BottomNavigationView.setupWithNavController(
             if (selectedItemTag != newlySelectedItemTag) {
                 // Pop everything above the first fragment (the "fixed start destination"), 返回栈清空
                 fragmentManager.popBackStack(firstFragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                println("fragmentManager.stackChildCount: ${fragmentManager.backStackEntryCount}")
                 val selectedFragment = fragmentManager.findFragmentByTag(newlySelectedItemTag)
                     as NavHostFragment
 
@@ -155,9 +149,7 @@ fun BottomNavigationView.setupWithNavController(
         // Reset the graph if the currentDestination is not valid (happens when the back
         // stack is popped after using the back button).
         selectedNavController.value?.let { controller ->
-            println("isBackStackEmpty ${controller.getCurrentDestination()}")
             if (controller.currentDestination == null) {
-                println("Top is Now")
                 controller.navigate(controller.graph.id)
             }
         }

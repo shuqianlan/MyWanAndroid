@@ -8,6 +8,7 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.xihu.mywanandroid.R
 import com.xihu.mywanandroid.ui.fragments.BaseFragment
+import com.xihu.mywanandroid.ui.interfaces.FragmentBackListener
 import com.xihu.mywanandroid.ui.jetpack.setupWithNavController
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -15,7 +16,7 @@ class MainActivity : BaseActivity() {
 
     private lateinit var drawerlayout:DrawerLayout
     private lateinit var currentNavController: LiveData<NavController>
-    private var backListener:BaseFragment.FragmentBackListener?=null
+    private var backListener: FragmentBackListener?=null
 
     override fun layoutResID() = R.layout.activity_main
 
@@ -50,11 +51,10 @@ class MainActivity : BaseActivity() {
 
     // 返回是在FragmentNavigator中处理
     override fun onNavigateUp(): Boolean {
-        println("onNavigateUp() ：。。。。。。。。。。。。。。。")
         return currentNavController?.value?.navigateUp() ?: false
     }
 
-    fun setBackForwardListener(listener: BaseFragment.FragmentBackListener?) {
+    fun setBackForwardListener(listener: FragmentBackListener?) {
         this.backListener = listener
     }
 
