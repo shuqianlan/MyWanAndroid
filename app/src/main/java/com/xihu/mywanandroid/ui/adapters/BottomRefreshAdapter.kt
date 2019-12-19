@@ -37,7 +37,8 @@ class BottomRefreshAdapter<T, DB:ViewDataBinding> private constructor(clazz: Cla
         holder: ViewHolder,
         position: Int
     ) {
-        if (position < (beans!!.size()-1)) {
+        val maxIndex = if (isEnd) beans!!.size() else beans!!.size()-1
+        if (position < maxIndex) {
             onBindView?.invoke(
                 holder.bindr as DB,
                 beans!![position]
@@ -56,7 +57,7 @@ class BottomRefreshAdapter<T, DB:ViewDataBinding> private constructor(clazz: Cla
 
 
     override fun getItemCount(): Int {
-        return beans!!.size() + if (isEnd) 0 else 1
+        return (beans!!.size() + if (isEnd) 0 else 1)
     }
 
     override fun onViewAttachedToWindow(holder: ViewHolder) {

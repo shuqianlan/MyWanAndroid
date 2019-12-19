@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.content_fragment_search_result.*
 import kotlinx.android.synthetic.main.content_fragment_search_result.toolbar
 import kotlinx.android.synthetic.main.home_article.view.*
 
-class SearchResultFragment : BaseFragment<SearchResultViewModel>() {
+class SearchResultFragment : BaseViewModelFragment<SearchResultViewModel>() {
 
     companion object {
         val SEARCHKEY = "com.xihu.mywanandroid.ui.fragments.SearchResultFragment.SEARCH_KEY"
@@ -73,8 +73,7 @@ class SearchResultFragment : BaseFragment<SearchResultViewModel>() {
                 SEARCHKEY, keyWord)?.commit()
         }
 
-        println("keyword: $keyWord")
-        toolbar.title = Html.fromHtml("<em class='highlight'>Kotlin协程</em>它不香吗？").toString()
+        toolbar.title = keyWord
 
         viewModel.initialize(0, keyWord)
     }

@@ -21,7 +21,7 @@ import com.xihu.mywanandroid.ui.view.TagSelectionView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_search.*
 
-class SearchFragment : BaseFragment<SearchViewModel>() {
+class SearchFragment : BaseViewModelFragment<SearchViewModel>() {
 
     override fun providerViewModelClazz()=SearchViewModel::class.java
     private val beans= mutableListOf<SearchKey>()

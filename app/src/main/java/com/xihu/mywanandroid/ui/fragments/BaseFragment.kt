@@ -9,49 +9,34 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.xihu.huidefeng.net.base.BaseViewModel
 import com.xihu.mywanandroid.ui.activities.MainActivity
+import com.xihu.mywanandroid.ui.interfaces.FragmentBackListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import java.lang.Boolean
 
-abstract class BaseFragment<VM:BaseViewModel> : Fragment(), CoroutineScope by MainScope() {
-    protected lateinit var viewModel:VM
-    val network_status = ObservableBoolean(false)
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        providerViewModelClazz().also {
-            viewModel = ViewModelProvider(this).get(it)
-            viewModel.getError().observe(this, Observer {
-                println("Exception $it")
-            })
-
-            viewModel.loading().observe(this, Observer {
-                print("Loading $it")
-            })
-
-            initViewModel()
-        }
-
-        lifecycle.addObserver(viewModel)
-    }
+open class BaseFragment : Fragment(), CoroutineScope by MainScope(), FragmentBackListener {
 
     override fun onDestroy() {
         super.onDestroy()
-        lifecycle.removeObserver(viewModel)
         cancel()
     }
 
-    abstract fun initViewModel()
-    abstract fun providerViewModelClazz(): Class<VM>
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
 
-    open fun onRetryDatas(view:View) {
-
+        (context as MainActivity).also {
+            it.setBackForwardListener(this@BaseFragment)
+        }
     }
 
-    interface FragmentBackListener {
-        fun onBackForawrd(): kotlin.Boolean
+    override fun onDetach() {
+        super.onDetach()
+
+        (context as MainActivity).also {
+            it.setBackForwardListener(null)
+        }
     }
 
-
+    override fun onBackForawrd()=false
 }

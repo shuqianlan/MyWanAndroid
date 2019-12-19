@@ -24,7 +24,7 @@ import com.xihu.mywanandroid.ui.view.CarouselLayout
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_fragment_home.*
 
-class HomeFragment : BaseFragment<HomeViewModel>() {
+class HomeFragment : BaseViewModelFragment<HomeViewModel>() {
 
     override fun providerViewModelClazz()=HomeViewModel::class.java
     var once = ObservableBoolean(true)

@@ -15,7 +15,7 @@ import com.xihu.mywanandroid.net.beans.ConfigBean
 import com.xihu.mywanandroid.ui.activities.MainActivity
 import kotlinx.android.synthetic.main.fragment_web_view.*
 
-class WebViewFragment : Fragment() {
+class WebViewFragment : BaseFragment() {
 
     companion object {
         val WEBVIEW_SEARCH_URL = "com.xihu.mywanandroid.ui.fragments.WebViewFragment.URL"
@@ -79,24 +79,11 @@ class WebViewFragment : Fragment() {
         webview.loadUrl(arguments?.getString(WEBVIEW_SEARCH_URL))
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        (context as MainActivity).setBackForwardListener(object :
-            BaseFragment.FragmentBackListener {
-            override fun onBackForawrd(): kotlin.Boolean {
-                if (webview != null && webview.canGoBack()) {
-                    webview.goBack()
-                    return true
-                }
-
-                return false
-            }
-        })
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        (context as MainActivity).setBackForwardListener(null)
-    }
-
+    override fun onBackForawrd() =
+        if (webview != null && webview.canGoBack()) {
+            webview.goBack()
+            true
+        } else {
+            false
+        }
 }
