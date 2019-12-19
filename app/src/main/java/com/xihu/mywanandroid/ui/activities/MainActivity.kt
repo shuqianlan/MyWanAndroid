@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.xihu.mywanandroid.R
+import com.xihu.mywanandroid.ui.fragments.BaseFragment
 import com.xihu.mywanandroid.ui.jetpack.setupWithNavController
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -14,6 +15,7 @@ class MainActivity : BaseActivity() {
 
     private lateinit var drawerlayout:DrawerLayout
     private lateinit var currentNavController: LiveData<NavController>
+    private var backListener:BaseFragment.FragmentBackListener?=null
 
     override fun layoutResID() = R.layout.activity_main
 
@@ -50,5 +52,16 @@ class MainActivity : BaseActivity() {
     override fun onNavigateUp(): Boolean {
         println("onNavigateUp() ：。。。。。。。。。。。。。。。")
         return currentNavController?.value?.navigateUp() ?: false
+    }
+
+    fun setBackForwardListener(listener: BaseFragment.FragmentBackListener?) {
+        this.backListener = listener
+    }
+
+    override fun onBackPressed() {
+        if (backListener != null && backListener!!.onBackForawrd()) {
+            return
+        }
+        super.onBackPressed()
     }
 }

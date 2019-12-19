@@ -34,6 +34,11 @@
 <!--            </intent-filter>-->
 
         </activity>
+
+        <!--   停用应用数据收集上传    -->
+        <meta-data android:name="android.webkit.WebView.MetricsOptOut"
+            android:value="true" />
+
     </application>
 
 </manifest>

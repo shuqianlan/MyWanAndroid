@@ -1,14 +1,18 @@
 package com.xihu.mywanandroid.ui.fragments
 
+import android.content.Context
 import android.os.Bundle
+import android.view.View
 import androidx.databinding.ObservableBoolean
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.xihu.huidefeng.net.base.BaseViewModel
+import com.xihu.mywanandroid.ui.activities.MainActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
+import java.lang.Boolean
 
 abstract class BaseFragment<VM:BaseViewModel> : Fragment(), CoroutineScope by MainScope() {
     protected lateinit var viewModel:VM
@@ -25,6 +29,8 @@ abstract class BaseFragment<VM:BaseViewModel> : Fragment(), CoroutineScope by Ma
             viewModel.loading().observe(this, Observer {
                 print("Loading $it")
             })
+
+            initViewModel()
         }
 
         lifecycle.addObserver(viewModel)
@@ -36,7 +42,16 @@ abstract class BaseFragment<VM:BaseViewModel> : Fragment(), CoroutineScope by Ma
         cancel()
     }
 
+    abstract fun initViewModel()
     abstract fun providerViewModelClazz(): Class<VM>
+
+    open fun onRetryDatas(view:View) {
+
+    }
+
+    interface FragmentBackListener {
+        fun onBackForawrd(): kotlin.Boolean
+    }
 
 
 }

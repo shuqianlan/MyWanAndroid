@@ -23,6 +23,6 @@ interface ApiService {
     suspend fun hotkeys():ResponseData<List<Hotkey>>
 
     @FormUrlEncoded
-    @POST("article/query/0/json")
-    suspend fun searchKey(@Field("k") word: String):ResponseData<Any>
+    @POST("article/query/{page}/json")
+    suspend fun searchKey(@Path("page") page:Int, @Field("k") word: String):ResponseData<ListArticles>
 }

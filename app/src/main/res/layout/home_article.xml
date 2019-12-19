@@ -99,7 +99,7 @@
                 android:layout_marginLeft="6dp" />
 
             <TextView
-                tools:text="Kotlin☞协程"
+                tools:text="Kotlin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/title"

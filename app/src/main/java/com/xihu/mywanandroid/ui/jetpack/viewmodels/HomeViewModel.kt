@@ -38,7 +38,6 @@ class HomeViewModel : BaseViewModel() {
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun loadHomeItems() = launchUI {
-
         onceLoading.value = false
         coroutineScope {
             async {

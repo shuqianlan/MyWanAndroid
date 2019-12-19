@@ -1,5 +1,6 @@
 package com.xihu.huidefeng.net.repository
 
+import android.text.Html
 import com.xihu.huidefeng.net.api.ApiService
 import com.xihu.huidefeng.net.base.BaseRepository
 import com.xihu.mywanandroid.net.beans.ConfigBean
@@ -41,7 +42,13 @@ class RemoteRepository private constructor(): BaseRepository() {
     }
 
     suspend fun topArticles() = request {
-        apiService.topArticles()
+        apiService.topArticles().apply {
+            data.forEachIndexed { index, article ->
+                article.shareUser?.trim()
+                article.author?.trim()
+                article.title = Html.fromHtml(article.title).toString()
+            }
+        }
     }
 
     suspend fun topBanners() = request {
@@ -49,7 +56,13 @@ class RemoteRepository private constructor(): BaseRepository() {
     }
 
     suspend fun homeArticles(page:Int) = request {
-        apiService.articles(page)
+        apiService.articles(page).apply {
+            data.datas.forEachIndexed { index, article ->
+                article.shareUser?.trim()
+                article.author?.trim()
+                article.title = Html.fromHtml(article.title).toString()
+            }
+        }
     }
 
     suspend fun hotWebsites() = request {
@@ -60,7 +73,7 @@ class RemoteRepository private constructor(): BaseRepository() {
         apiService.hotkeys()
     }
 
-    suspend fun searchKey(word:String) = request {
-        apiService.searchKey(word = word)
+    suspend fun searchKey(page: Int, word:String) = request {
+        apiService.searchKey(word = word, page = page)
     }
 }

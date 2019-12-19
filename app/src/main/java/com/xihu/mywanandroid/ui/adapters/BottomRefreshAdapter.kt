@@ -78,8 +78,8 @@ class BottomRefreshAdapter<T, DB:ViewDataBinding> private constructor(clazz: Cla
     }
 
     inline fun<reified B:T> extendDatas(beans: List<B>) {
-        notifyDataSetChanged()
         this.beans!!.addAll(beans)
+        notifyDataSetChanged()
     }
 
     class Builder<B,VB:ViewDataBinding>(
@@ -98,6 +98,11 @@ class BottomRefreshAdapter<T, DB:ViewDataBinding> private constructor(clazz: Cla
 
         fun bindView(bindTo:((binder:VB, bean:B) -> Unit)?=null):Builder<B, VB> {
             adapter.onBindView = bindTo
+            return this
+        }
+
+        fun callOnClick(onClick:((view:View, bean:B)->Unit)): Builder<B, VB> {
+            adapter.onClickItemView = onClick
             return this
         }
 

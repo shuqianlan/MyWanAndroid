@@ -18,6 +18,9 @@
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim"
         />
+        <action
+            android:id="@+id/action_navigation_home_to_webViewFragment"
+            app:destination="@id/webViewFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -36,5 +39,14 @@
     <fragment
         android:id="@+id/searchResultFragment"
         android:name="com.xihu.mywanandroid.ui.fragments.SearchResultFragment"
-        tools:layout="@layout/fragment_search_result" />
+        tools:layout="@layout/fragment_search_result" >
+        <action
+            android:id="@+id/action_searchResultFragment_to_webViewFragment"
+            app:destination="@id/webViewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/webViewFragment"
+        android:name="com.xihu.mywanandroid.ui.fragments.WebViewFragment"
+        android:label="fragment_web_view"
+        tools:layout="@layout/fragment_web_view" />
 </navigation>

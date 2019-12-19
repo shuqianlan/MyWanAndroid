@@ -31,9 +31,7 @@ class HomeFragment : BaseFragment<HomeViewModel>() {
 
     private lateinit var adapter:BottomRefreshAdapter<Article,HomeArticleBinding>
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    override fun initViewModel() {
         viewModel.topArticles.observe(this, Observer {
             refresh_layout.isRefreshing = false
             adapter.extendDatas(it)
@@ -104,6 +102,7 @@ class HomeFragment : BaseFragment<HomeViewModel>() {
                     }
             }, onLoadData = {viewModel.loadHomeArticles()})
         .bindView { binder, bean -> binder.article = bean }
+        .callOnClick { _, bean -> showWebviewFragment(bean.link) }
         .build().also {
             adapter = it
         }
@@ -116,8 +115,7 @@ class HomeFragment : BaseFragment<HomeViewModel>() {
 
         carousel_cont.setOnScrollListener(object :CarouselLayout.OnScrollListener {
             override fun callOnClick(index: Int, view: View) {
-                val tag = (view as? ConstraintLayout)?.tag
-                println("callOnClick tag $tag ")
+                showWebviewFragment((view.tag as Banner).url)
             }
         })
 
@@ -127,40 +125,6 @@ class HomeFragment : BaseFragment<HomeViewModel>() {
             up_to_top.scaleY = 0f
         }
 
-//        home_root_cont.setOnClickListener {
-//            println("why not here")
-//            onRetryDatas(it)
-//        }
-    }
-
-    override fun onStart() {
-        println("HomeFragment onStart ...") // 又来
-        super.onStart()
-    }
-
-    override fun onPause() {
-        println("HomeFragment onPause ...")
-        super.onPause()
-    }
-
-    override fun onStop() {
-        println("HomeFragment onStop ...")
-        super.onStop()
-    }
-
-    override fun onDestroy() {
-        println("HomeFragment onDestroy ...")
-        super.onDestroy()
-    }
-
-    override fun onDestroyView() {
-        println("HomeFragment onDestroyView ...")
-        super.onDestroyView()
-    }
-
-    override fun onDetach() {
-        println("HomeFragment onDetach ...")
-        super.onDetach()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -191,8 +155,13 @@ class HomeFragment : BaseFragment<HomeViewModel>() {
 
     }
 
-    fun onRetryDatas(view:View) {
+    override fun onRetryDatas(view: View) {
         viewModel.loadHomeItems()
     }
 
+    private fun showWebviewFragment(url:String) {
+        Navigation.findNavController(carousel_cont).navigate(R.id.action_navigation_home_to_webViewFragment, Bundle().also {
+            it.putString(WebViewFragment.WEBVIEW_SEARCH_URL, url)
+        })
+    }
 }

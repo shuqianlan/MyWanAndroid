@@ -26,9 +26,7 @@ class SearchFragment : BaseFragment<SearchViewModel>() {
     override fun providerViewModelClazz()=SearchViewModel::class.java
     private val beans= mutableListOf<SearchKey>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    override fun initViewModel() {
         viewModel.hotkeys.observe(this, Observer {
             tagSelectionView.setTags(it.map { hotkey ->
                 hotkey.name
@@ -56,8 +54,7 @@ class SearchFragment : BaseFragment<SearchViewModel>() {
 
         tagSelectionView.setTagClickListener(object :TagSelectionView.OnTagClickListener {
             override fun onTagClick(view: View) {
-                search_value.setText((view.tag as Hotkey).name)
-                onSearchKey(view)
+                onStartSearch((view.tag as Hotkey).name)
             }
         })
 
@@ -79,7 +76,7 @@ class SearchFragment : BaseFragment<SearchViewModel>() {
                 }
 
                 holder.bindr.cont.setOnClickListener {
-                    Snackbar.make(holder.bindr.root, beans[position].value, Snackbar.LENGTH_SHORT).show()
+                    onStartSearch(beans[position].value)
                 }
             }
 
@@ -94,10 +91,12 @@ class SearchFragment : BaseFragment<SearchViewModel>() {
 
     fun onSearchKey(view:View) {
         val searchKey = search_value.text.toString()
-        println("searchKey: $searchKey")
+        onStartSearch(searchKey)
+    }
 
-        Navigation.findNavController(view).navigate(R.id.action_searchFragment_to_searchResultFragment, Bundle().also {
-            it.putString(SearchResultFragment.SEARCHKEY, searchKey)
+    private fun onStartSearch(word:String) {
+        Navigation.findNavController(search_value).navigate(R.id.action_searchFragment_to_searchResultFragment, Bundle().also {
+            it.putString(SearchResultFragment.SEARCHKEY, word)
         })
     }
 }

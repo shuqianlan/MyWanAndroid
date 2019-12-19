@@ -1,6 +1,5 @@
 package com.xihu.mywanandroid.utils
 
-import android.content.Context
 import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
@@ -18,6 +17,7 @@ object ConverterUtil {
         } else {
             View.VISIBLE
         }
+
     }
 
     @BindingAdapter("imageUrl")
