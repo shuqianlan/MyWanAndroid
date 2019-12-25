@@ -82,6 +82,10 @@ class BottomRefreshAdapter<T, DB:ViewDataBinding> private constructor(clazz: Cla
         this.beans!!.addAll(beans)
     }
 
+    fun clearDatas() {
+        this.beans!!.clear()
+    }
+
     class Builder<B,VB:ViewDataBinding>(
         clazz: Class<B>,
         viewLayout:((viewType:Int) -> Int),

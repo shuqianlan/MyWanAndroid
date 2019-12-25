@@ -76,4 +76,16 @@ class RemoteRepository private constructor(): BaseRepository() {
     suspend fun searchKey(page: Int, word:String) = request {
         apiService.searchKey(word = word, page = page)
     }
+
+    suspend fun loadProjects() = request {
+        apiService.projectTree()
+    }
+
+    suspend fun projectItems(page:Int, cid:Int) = request{
+        apiService.projectlist(page, cid)
+    }
+
+    suspend fun lastestProjectItems(page:Int) = request{
+        apiService.lastestProjestList(page)
+    }
 }

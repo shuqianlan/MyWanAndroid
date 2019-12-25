@@ -18,4 +18,6 @@
     <string name="search_clear">清空</string>
     <string name="search_hot_tips">热门搜索</string>
     <string name="search_hint">请输入....</string>
+
+    <string name="lastest_proj">最新项目</string>
 </resources>

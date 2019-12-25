@@ -10,5 +10,14 @@
         android:id="@+id/navigation_proj"
         android:name="com.xihu.mywanandroid.ui.fragments.ProjFragment"
         android:label="@string/bottom_menu_project"
-        tools:layout="@layout/fragment_proj" />
+        tools:layout="@layout/content_fragment_proj" >
+        <action
+            android:id="@+id/action_navigation_proj_to_webViewFragment2"
+            app:destination="@id/webViewFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/webViewFragment2"
+        android:name="com.xihu.mywanandroid.ui.fragments.WebViewFragment"
+        android:label="fragment_web_view"
+        tools:layout="@layout/fragment_web_view" />
 </navigation>

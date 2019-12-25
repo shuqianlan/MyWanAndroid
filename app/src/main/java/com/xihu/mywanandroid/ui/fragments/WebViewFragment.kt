@@ -27,7 +27,14 @@ class WebViewFragment : BaseFragment() {
         return inflater.inflate(R.layout.fragment_web_view, container, false)
     }
 
+    private var url:String? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        webviewCont.setOnRefreshListener {
+            loadUrl()
+            webviewCont.isRefreshing = false
+        }
+
         webview.webViewClient = object :WebViewClient() {
             private var mWebView:WebView?=null
             init {
@@ -55,7 +62,7 @@ class WebViewFragment : BaseFragment() {
                 view: WebView?,
                 request: WebResourceRequest?
             ): Boolean {
-                val url = request?.url.toString()
+                url = request?.url.toString()
                 println("url: $url")
                 return false
             }
@@ -76,7 +83,15 @@ class WebViewFragment : BaseFragment() {
         }
 
         println("WebViewFragment: url ${arguments?.getString(WEBVIEW_SEARCH_URL)}")
-        webview.loadUrl(arguments?.getString(WEBVIEW_SEARCH_URL))
+        url = arguments?.getString(WEBVIEW_SEARCH_URL)
+
+        loadUrl()
+    }
+
+    private fun loadUrl() {
+        url?.also {
+            webview.loadUrl(it)
+        }
     }
 
     override fun onBackForawrd() =

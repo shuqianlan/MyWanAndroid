@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="article"
+            type="com.xihu.mywanandroid.net.beans.Article" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="120dp"
+        android:background="@android:color/white"
+        android:layout_marginTop="10dp"
+        >
+
+        <TextView
+            android:id="@+id/title"
+            android:text="@{article.title}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="前端框架uniapp版玩安卓客户端"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:textSize="14sp"
+
+            />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:id="@+id/snap"
+            app:imageUrl="@{article.envelopePic}"
+            android:layout_margin="4dp"
+            app:layout_constraintDimensionRatio="W,1:1"
+            tools:src="@drawable/menu_home_search"
+            android:scaleType="centerInside"
+            app:layout_constraintTop_toBottomOf="@id/title"
+            app:layout_constraintBottom_toTopOf="@id/date"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:clipChildren="true"
+            android:clipToPadding="true"
+            app:layout_constraintBottom_toTopOf="@id/date"
+            app:layout_constraintEnd_toStartOf="@id/snap"
+            app:layout_constraintStart_toStartOf="@id/title"
+            app:layout_constraintTop_toBottomOf="@id/title"
+            >
+            <TextView
+                android:id="@+id/desc"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="12sp"
+                android:text="@{article.desc}"
+                android:ellipsize="end"
+                tools:text="使用前端跨端框架开发一款安卓版本的玩安卓App,具体实现了登录注册，体系，公众号，项目列表功能，还有导航功能，收藏文章项目功能等。还使用了高德地图api实现机主定位功能。" />
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/date"
+            tools:text="2019-12-25 17:32:32"
+            android:text="@{article.niceDate}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"
+            android:textSize="10sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/author"
+            tools:text="wuzh"
+            android:textSize="10sp"
+            android:text="@{(article.author.length() != 0) ? article.author : article.shareUser}"
+            app:layout_constraintStart_toEndOf="@id/date"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

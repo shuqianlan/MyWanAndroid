@@ -8,27 +8,36 @@ import androidx.core.text.HtmlCompat
 import java.net.URLDecoder
 
 data class Article(
-//    val audit:Int,
+    val apkLink:String,
+    val audit:Int,
     val author:String?=null,
     val shareUser:String?=null,
-//    val chapterId:Int,
+    val chapterId:Int,
     val chapterName:String,
     val collect:Boolean,
-//    val courseId:Int,
-//    val desc:String,
+    val courseId:Int,
+    val desc:String,
     val id:Long,
+    val envelopePic:String,
+    val fresh:Boolean,
     val niceDate: String,
+    val niceShareData:String,
     val publishTime:Long,
-//    val shareDate:Long,
-//    val superChapterId:Int,
+    val origin:String,
+    val prefix:String,
+    val projectLink:String,
+    val selfVisible:Int,
+    val shareDate:Long,
+    val superChapterId:Int,
     val superChapterName:String,
     var title:String,
-//    val type:Int,
+    val type:Int,
     val link:String,
     var stick:Boolean=false,
     val zan:Int,
-    val fresh:Boolean,
-    val tags:List<Tags>
+    val tags:List<Tags>,
+    val visible:Int,
+    val userId:Int
 ) {
 
     data class Tags(
