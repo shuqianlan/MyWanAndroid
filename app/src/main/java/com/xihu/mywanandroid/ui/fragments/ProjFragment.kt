@@ -29,14 +29,17 @@ class ProjFragment : BaseViewModelFragment<ProjViewModel>() {
 
     override fun initViewModel() {
         viewModel.projects.observe(this, Observer {
-            println("Projectes $it")
             bindProjects(it.toMutableList())
         })
 
         viewModel.projectItems.observe(this, Observer {
-            (list_projects.adapter as BottomRefreshAdapter<Article, LayoutProjectItemBinding>).extendDatas(it.datas)
-            println("ProjectsItems: $it")
-            println("isOver: ${it.over}")
+            with(list_projects.adapter as BottomRefreshAdapter<Article, LayoutProjectItemBinding>){
+                println("datas ${it.datas}")
+                extendDatas(it.datas)
+                if (it.over) {
+                    setToEnd(true)
+                }
+            }
         })
     }
 
