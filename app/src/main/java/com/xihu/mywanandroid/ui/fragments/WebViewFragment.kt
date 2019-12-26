@@ -63,7 +63,6 @@ class WebViewFragment : BaseFragment() {
                 request: WebResourceRequest?
             ): Boolean {
                 url = request?.url.toString()
-                println("url: $url")
                 return false
             }
 
@@ -72,8 +71,11 @@ class WebViewFragment : BaseFragment() {
         webview.webChromeClient = object : WebChromeClient() {
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
-                loading.progress = newProgress
-                loading.visibility = if (newProgress == 100) View.GONE else View.VISIBLE
+
+                loading?.apply {
+                    progress = newProgress
+                    visibility = if (newProgress == 100) View.GONE else View.VISIBLE
+                }
             }
         }
 
@@ -82,7 +84,6 @@ class WebViewFragment : BaseFragment() {
             loadWithOverviewMode = true
         }
 
-        println("WebViewFragment: url ${arguments?.getString(WEBVIEW_SEARCH_URL)}")
         url = arguments?.getString(WEBVIEW_SEARCH_URL)
 
         loadUrl()

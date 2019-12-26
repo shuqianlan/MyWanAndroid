@@ -12,7 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="120dp"
+        android:minHeight="140dp"
         android:background="@android:color/white"
         android:layout_marginTop="10dp"
         >
@@ -22,7 +22,8 @@
             android:singleLine="true"
             android:text="@{article.title}"
             android:gravity="left|center_vertical"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            app:layout_constraintEnd_toStartOf="@id/snap"
             android:layout_height="wrap_content"
             tools:text="前端框架uniapp版玩安卓客户端"
             app:layout_constraintTop_toTopOf="parent"
@@ -30,7 +31,6 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:textSize="14sp"
-
             />
 
         <ImageView
@@ -49,10 +49,12 @@
         <TextView
             android:id="@+id/desc"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:textSize="12sp"
             android:text="@{article.desc}"
             android:ellipsize="end"
+            android:paddingRight="2dp"
+            android:maxLines="4"
             android:layout_marginVertical="10dp"
             android:gravity="center_vertical|left"
             tools:text="使用前端跨端框架开发一款安卓版本的玩安卓App,具体实现了登录注册，体系，公众号，项目列表功能，还有导航功能，收藏文章项目功能等。还使用了高德地图api实现机主定位功能。"

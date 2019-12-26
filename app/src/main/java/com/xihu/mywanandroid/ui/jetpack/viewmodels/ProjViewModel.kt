@@ -45,6 +45,7 @@ class ProjViewModel : BaseViewModel() {
             repository.projectItems(atomic.getAndIncrement(), cid)
         }
 
+        println("response: $response")
         response?.also {
             projectItems.value = it.data
         }

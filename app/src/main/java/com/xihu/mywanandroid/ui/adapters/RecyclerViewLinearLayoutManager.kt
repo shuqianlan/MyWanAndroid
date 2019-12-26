@@ -35,4 +35,12 @@ class RecyclerViewLinearLayoutManager : LinearLayoutManager {
 
     }
 
+    override fun onLayoutChildren(recycler: RecyclerView.Recycler?, state: RecyclerView.State?) {
+        try {
+            super.onLayoutChildren(recycler, state)
+        } catch (exp:Exception) {
+
+        }
+    }
+
 }

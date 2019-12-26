@@ -21,7 +21,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:id="@+id/list_projects"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layoutManager=".ui.adapters.RecyclerViewLinearLayoutManager"
         android:orientation="vertical"
         />
 
