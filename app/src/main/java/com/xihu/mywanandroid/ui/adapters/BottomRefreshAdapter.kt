@@ -13,6 +13,7 @@ import java.security.InvalidParameterException
 
 class BottomRefreshAdapter<T, DB:ViewDataBinding> private constructor(clazz: Class<T>, cb:InstanceBeansCallBack<T, DB>): RecyclerView.Adapter<ViewHolder>() {
     private val FOOTER_VIEW_TAG = -1
+    private val BOTTOM_VIEW_TAG = -2
     var beans: SortedList<T>? = null
 
     protected var onBindView: ((binder:DB, bean:T) -> Unit) ?= null
@@ -29,6 +30,8 @@ class BottomRefreshAdapter<T, DB:ViewDataBinding> private constructor(clazz: Cla
         viewType: Int
     ) = if (viewType == FOOTER_VIEW_TAG) {
             ViewHolder(DataBindingUtil.inflate<DB>(LayoutInflater.from(parent.context), R.layout.bottomrefreshlayout, parent, false))
+        } else if (viewType == BOTTOM_VIEW_TAG) {
+            ViewHolder(DataBindingUtil.inflate<DB>(LayoutInflater.from(parent.context), R.layout.layout_bottom_line, parent, false))
         } else {
             ViewHolder(DataBindingUtil.inflate<DB>(LayoutInflater.from(parent.context), layoutResource?.invoke(viewType)!!, parent, false))
         }
@@ -57,7 +60,7 @@ class BottomRefreshAdapter<T, DB:ViewDataBinding> private constructor(clazz: Cla
 
 
     override fun getItemCount(): Int {
-        return (beans!!.size() + if (isEnd) 0 else 1)
+        return beans!!.size() + 1 // 要么是Loading要么是底线
     }
 
     override fun onViewAttachedToWindow(holder: ViewHolder) {
@@ -69,6 +72,10 @@ class BottomRefreshAdapter<T, DB:ViewDataBinding> private constructor(clazz: Cla
 
     override fun getItemViewType(position: Int): Int {
         var viewType = FOOTER_VIEW_TAG
+
+        if (isEnd) {
+            viewType = BOTTOM_VIEW_TAG
+        }
         if (position < beans!!.size()) {
             viewType = getViewType(beans!![position])
             if (viewType < 0) {
