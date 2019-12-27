@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.core.view.get
 import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SortedListAdapterCallback
 import com.google.android.material.tabs.TabLayout
@@ -44,14 +45,11 @@ class ProjFragment : BaseViewModelFragment<ProjViewModel>() {
                 if (it.over) {
                     setToEnd(true)
                 }
+                if (reset) {
+                    list_projects.scrollToPosition(0)
+                    reset = false
+                }
 
-            }
-
-
-            if (reset) {
-
-                list_projects.smoothScrollToPosition(0)
-                reset = false
             }
 
         })
@@ -76,6 +74,7 @@ class ProjFragment : BaseViewModelFragment<ProjViewModel>() {
             override fun onTabUnselected(p0: TabLayout.Tab?) {}
 
             override fun onTabSelected(p0: TabLayout.Tab?) {
+                reset = true
                 (list_projects.adapter as BottomRefreshAdapter<Article, LayoutProjectItemBinding>).clearDatas()
                 (p0?.tag as? Project)?.also {
                     viewModel.resetLoadProjItems(it.id, it.id == -1)
@@ -115,15 +114,51 @@ class ProjFragment : BaseViewModelFragment<ProjViewModel>() {
         }
         .build()
 
+        (list_projects.adapter as RecyclerView.Adapter).registerAdapterDataObserver(object :RecyclerView.AdapterDataObserver() {
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                super.onItemRangeInserted(positionStart, itemCount)
+
+                println("onItemRangeInserted $itemCount")
+//                if (reset) {
+//                    list_projects.smoothScrollToPosition(0)
+//                    reset = false
+//                }
+            }
+
+            override fun onChanged() {
+                println("onChanged ")
+                super.onChanged()
+            }
+
+            override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
+                super.onItemRangeRemoved(positionStart, itemCount)
+
+                println("onItemRangeRemoved $itemCount")
+            }
+
+            override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
+                super.onItemRangeMoved(fromPosition, toPosition, itemCount)
+                println("onItemRangeRemoved fromPosition:$fromPosition, toPosition:$toPosition, itemCount:$itemCount")
+            }
+        })
+
         list_projects.addOnScrollListener(object :RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
+
+                println("onScrolled")
             }
 
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
 
-                println("")
+                val status = when(newState) {
+                    RecyclerView.SCROLL_STATE_IDLE -> "IDLE"
+                    RecyclerView.SCROLL_STATE_DRAGGING -> "Dragging"
+                    RecyclerView.SCROLL_STATE_SETTLING -> "Setting"
+                    else -> "unknown"
+                }
+                println("onScrollStateChanged status $status")
             }
 
         })

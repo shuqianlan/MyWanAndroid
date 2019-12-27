@@ -2,9 +2,11 @@ package com.xihu.mywanandroid.utils
 
 import android.util.TypedValue
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.annotation.NonNull
 import androidx.databinding.BindingAdapter
+import com.airbnb.lottie.LottieAnimationView
 import com.bumptech.glide.Glide
 
 
@@ -12,6 +14,12 @@ object ConverterUtil {
 
     @BindingAdapter("isGone")
     @JvmStatic fun bindIsGone(@NonNull view: View, gone:Boolean) {
+
+        if (view is FrameLayout) {
+            println("FrameLayout gone: $gone")
+        } else if (view is LottieAnimationView) {
+            println("LottieAnimationView gone: $gone")
+        }
         view.visibility = if (gone) {
             View.GONE
         } else {

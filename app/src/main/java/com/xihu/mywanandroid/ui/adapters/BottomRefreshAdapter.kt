@@ -58,15 +58,19 @@ class BottomRefreshAdapter<T, DB:ViewDataBinding> private constructor(clazz: Cla
         }
     }
 
-
     override fun getItemCount(): Int {
         return beans!!.size() + 1 // 要么是Loading要么是底线
     }
 
     override fun onViewAttachedToWindow(holder: ViewHolder) {
         super.onViewAttachedToWindow(holder)
+
         if ((holder.itemViewType == FOOTER_VIEW_TAG) and !isEnd) {
+            if (holder.layoutPosition == 0) {
+                holder.bindr.root.visibility = View.INVISIBLE
+            }
             onLoadData?.invoke()
+
         }
     }
 
@@ -91,6 +95,7 @@ class BottomRefreshAdapter<T, DB:ViewDataBinding> private constructor(clazz: Cla
 
     fun clearDatas() {
         this.beans!!.clear()
+        setToEnd(false)
     }
 
     class Builder<B,VB:ViewDataBinding>(

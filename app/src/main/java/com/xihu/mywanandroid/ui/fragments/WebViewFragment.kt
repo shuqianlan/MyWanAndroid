@@ -1,40 +1,43 @@
 package com.xihu.mywanandroid.ui.fragments
 
 
-import android.content.Context
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.*
-import androidx.navigation.Navigation
-import com.xihu.mywanandroid.R
-import com.xihu.mywanandroid.net.beans.ConfigBean
-import com.xihu.mywanandroid.ui.activities.MainActivity
-import kotlinx.android.synthetic.main.fragment_web_view.*
+import com.xihu.mywanandroid.databinding.FragmentWebViewBinding
+import com.xihu.mywanandroid.ui.jetpack.viewmodels.WebviewModel
+import kotlinx.android.synthetic.main.content_fragment_webview.*
 
-class WebViewFragment : BaseFragment() {
+class WebViewFragment : BaseViewModelFragment<WebviewModel>() {
 
     companion object {
         val WEBVIEW_SEARCH_URL = "com.xihu.mywanandroid.ui.fragments.WebViewFragment.URL"
     }
+
+    private lateinit var binder:FragmentWebViewBinding
+    override fun providerViewModelClazz()=WebviewModel::class.java
+
+    override fun initViewModel() {
+    }
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_web_view, container, false)
+        return FragmentWebViewBinding.inflate(layoutInflater, container, false).apply {
+            viewmodel = viewModel
+            fragment = this@WebViewFragment
+            lifecycleOwner = viewLifecycleOwner
+        }.root
     }
 
     private var url:String? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        webviewCont.setOnRefreshListener {
-            loadUrl()
-            webviewCont.isRefreshing = false
-        }
-
         webview.webViewClient = object :WebViewClient() {
             private var mWebView:WebView?=null
             init {
@@ -66,17 +69,35 @@ class WebViewFragment : BaseFragment() {
                 return false
             }
 
+            override fun onReceivedError(
+                view: WebView?,
+                request: WebResourceRequest?,
+                error: WebResourceError?
+            ) {
+                super.onReceivedError(view, request, error)
+
+                viewModel.isOnError(true)
+            }
+
         }
 
         webview.webChromeClient = object : WebChromeClient() {
+            var once = true
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
 
                 loading?.apply {
                     progress = newProgress
                     visibility = if (newProgress == 100) View.GONE else View.VISIBLE
+
+                    if (once and (visibility == View.VISIBLE)) {
+                        viewModel.isOnError(false)
+                        once = false
+                    }
+                    once = newProgress == 100
                 }
             }
+
         }
 
         webview.settings.apply {
@@ -93,6 +114,10 @@ class WebViewFragment : BaseFragment() {
         url?.also {
             webview.loadUrl(it)
         }
+    }
+
+    override fun onRetryDatas(view:View) {
+        loadUrl()
     }
 
     override fun onBackForawrd() =
