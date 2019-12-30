@@ -24,7 +24,7 @@ class MainActivity : BaseActivity() {
         if (savedInstanceState == null) {
             val navGraphIds = listOf(
                 R.navigation.bottom_nav_home,
-                R.navigation.bottom_nav_square,
+                R.navigation.bottom_nav_system,
                 R.navigation.bottom_nav_public,
                 R.navigation.bottom_nav_proj
             )

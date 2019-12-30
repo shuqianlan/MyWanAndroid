@@ -20,4 +20,8 @@
         <attr name="enable_touch" format="boolean" />
     </declare-styleable>
 
+    <declare-styleable name="NetworkRefreshLayout">
+        <attr name="content_main" format="reference" />
+    </declare-styleable>
+
 </resources>

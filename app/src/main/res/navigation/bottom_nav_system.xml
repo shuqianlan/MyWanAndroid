@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottom_nav_system"
+    app:startDestination="@id/systemmFragment">
+    <fragment
+        android:id="@+id/systemmFragment"
+        android:name="com.xihu.mywanandroid.ui.fragments.SystemmFragment"
+        android:label="fragment_systemm"
+        tools:layout="@layout/fragment_systemm" >
+        <action
+            android:id="@+id/action_systemmFragment_to_webViewFragment3"
+            app:destination="@id/webViewFragment3" />
+    </fragment>
+    <fragment
+        android:id="@+id/webViewFragment3"
+        android:name="com.xihu.mywanandroid.ui.fragments.WebViewFragment"
+        android:label="content_fragment_webview"
+        tools:layout="@layout/content_fragment_webview" />
+</navigation>

@@ -22,13 +22,7 @@ class TagSelectionView :ViewGroup {
     private var tagListener:OnTagClickListener?=null
     constructor(context: Context?) : this(context, null)
     constructor(context: Context?, attrs: AttributeSet?) : this(context, attrs, 0)
-    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(
-        context,
-        attrs,
-        defStyleAttr
-    ) {
-
-    }
+    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 

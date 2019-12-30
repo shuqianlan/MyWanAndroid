@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.xihu.mywanandroid.ui.view.NetworkRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    app:content_main="@layout/content_fragment_proj"
+    >
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/loading"
+        android:layout_gravity="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:id="@+id/lottile_view"
+        app:isGone="@{viewModel.loading() ? true : !viewModel.error_state}"
+        app:layout_constraintWidth_percent="0.8"
+        app:layout_constraintDimensionRatio="H,1:1"
+        app:lottie_repeatMode="restart"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/err_state"
+        app:lottie_autoPlay="true"
+        android:focusable="false"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/lottile_view"
+        android:text="@string/content_err_infos"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:focusable="false"
+        android:layout_margin="20dp" />
+
+</com.xihu.mywanandroid.ui.view.NetworkRefreshLayout>

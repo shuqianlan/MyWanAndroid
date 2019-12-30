@@ -10,10 +10,10 @@
         />
 
     <item
-        android:title="@string/bottom_menu_square"
-        android:id="@+id/bottom_nav_square"
-        android:icon="@drawable/bottom_square"
-        android:contentDescription="@string/bottom_menu_square"
+        android:title="@string/bottom_menu_system"
+        android:id="@+id/bottom_nav_system"
+        android:icon="@drawable/bottom_system"
+        android:contentDescription="@string/bottom_menu_system"
         />
 
     <item
