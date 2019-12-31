@@ -1,52 +1,40 @@
-package com.xihu.huidefeng.net.base
+package com.xihu.mywanandroid.net.base
 
 import androidx.lifecycle.*
-import com.xihu.huidefeng.net.repository.RemoteRepository
+import com.xihu.mywanandroid.net.repository.RemoteRepository
 import com.xihu.mywanandroid.net.beans.ConfigBean
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
-import kotlinx.coroutines.withTimeoutOrNull
 import java.lang.Exception
+import java.util.concurrent.atomic.AtomicInteger
 
 open class BaseViewModel : ViewModel(), LifecycleObserver {
 
-    private val error by lazy { MutableLiveData<Exception>() }
-    private val loading by lazy { MutableLiveData<Boolean>() }
-    val error_state = MutableLiveData(false) // 是否异常
-    protected val repository:RemoteRepository
+    val exception by lazy { MutableLiveData<Exception>() }
+    val error by lazy { MutableLiveData(false) }
+    val loading by lazy { MutableLiveData(false) }
+    val once by lazy { MutableLiveData(false) }
+    private val atomic = AtomicInteger(0)
 
-    init {
-        repository = RemoteRepository.instance
-    }
+    val repository = RemoteRepository.instance
 
     fun launchUI(block: suspend CoroutineScope.()->Unit) = viewModelScope.launch {
+        error.value = false
         loading.value = true
-        error_state.value = false
+        once.value = atomic.getAndIncrement() == 0 // 仅首次会调用到此处!
+
         try {
-            // 超时则抛出异常TimeoutCancellationException
-            withTimeoutOrNull(ConfigBean.instance.Retrofit.requestTimeout) {
+            withTimeout(ConfigBean.instance.Retrofit.requestTimeout) {
                 block() // 此处切换到线程池的上下文.
             }
         } catch (e: Exception) {
-            onError()
-            println("exception: $e")
-            error.value = e
-            error_state.value = true
-            println("now is here!")
+            exception.value = e
+            error.value = true
         } finally {
             loading.value = false
+            once.value = false
         }
     }
 
-    fun getError(): LiveData<Exception> {
-        return error
-    }
-
-    fun loading(): LiveData<Boolean> {
-        return loading
-    }
-
-
-    open fun onError() {}
 }

@@ -1,8 +1,8 @@
-package com.xihu.huidefeng.net.repository
+package com.xihu.mywanandroid.net.repository
 
 import android.text.Html
-import com.xihu.huidefeng.net.api.ApiService
-import com.xihu.huidefeng.net.base.BaseRepository
+import com.xihu.mywanandroid.net.api.ApiService
+import com.xihu.mywanandroid.net.base.BaseRepository
 import com.xihu.mywanandroid.net.beans.ConfigBean
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit

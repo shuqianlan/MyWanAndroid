@@ -1,6 +1,6 @@
-package com.xihu.huidefeng.net.api
+package com.xihu.mywanandroid.net.api
 
-import com.xihu.huidefeng.net.beans.*
+import com.xihu.mywanandroid.net.beans.*
 import com.xihu.mywanandroid.net.beans.*
 import retrofit2.http.*
 

@@ -7,7 +7,7 @@ import androidx.databinding.ObservableBoolean
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.xihu.huidefeng.net.base.BaseViewModel
+import com.xihu.mywanandroid.net.base.BaseViewModel
 import com.xihu.mywanandroid.ui.activities.MainActivity
 import com.xihu.mywanandroid.ui.interfaces.FragmentBackListener
 import kotlinx.coroutines.CoroutineScope

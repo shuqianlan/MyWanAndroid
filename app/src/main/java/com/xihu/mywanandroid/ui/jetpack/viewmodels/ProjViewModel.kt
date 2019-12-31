@@ -3,7 +3,7 @@ package com.xihu.mywanandroid.ui.jetpack.viewmodels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.OnLifecycleEvent
-import com.xihu.huidefeng.net.base.BaseViewModel
+import com.xihu.mywanandroid.net.base.BaseViewModel
 import com.xihu.mywanandroid.net.beans.Article
 import com.xihu.mywanandroid.net.beans.Project
 import com.xihu.mywanandroid.net.beans.ProjectItems

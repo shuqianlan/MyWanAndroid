@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="network_root" type="id" />
+    <item name="network_loading" type="id" />
+    <item name="network_lottile" type="id" />
+
+</resources>

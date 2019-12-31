@@ -6,8 +6,8 @@ import android.system.Os
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.OnLifecycleEvent
-import com.xihu.huidefeng.net.base.BaseViewModel
-import com.xihu.huidefeng.net.repository.RemoteRepository
+import com.xihu.mywanandroid.net.base.BaseViewModel
+import com.xihu.mywanandroid.net.repository.RemoteRepository
 import com.xihu.mywanandroid.WanApp
 import com.xihu.mywanandroid.net.beans.Hotkey
 import com.xihu.mywanandroid.net.beans.SearchKey

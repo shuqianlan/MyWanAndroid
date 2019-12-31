@@ -1,6 +1,6 @@
-package com.xihu.huidefeng.net.base
+package com.xihu.mywanandroid.net.base
 
-import com.xihu.huidefeng.net.beans.ResponseData
+import com.xihu.mywanandroid.net.beans.ResponseData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.xihu.huidefeng.net.base.BaseViewModel
+import com.xihu.mywanandroid.net.base.BaseViewModel
 import kotlinx.coroutines.cancel
 
 abstract class BaseViewModelFragment<VM: BaseViewModel> : BaseFragment() {
@@ -18,12 +18,8 @@ abstract class BaseViewModelFragment<VM: BaseViewModel> : BaseFragment() {
 
         providerViewModelClazz().also {
             viewModel = ViewModelProvider(this).get(it)
-            viewModel.getError().observe(this, Observer {
+            viewModel.exception.observe(this, Observer {
                 println("Exception $it")
-            })
-
-            viewModel.loading().observe(this, Observer {
-                print("Loading $it")
             })
 
             initViewModel()
