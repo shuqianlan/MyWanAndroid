@@ -23,7 +23,6 @@
         >
 
         <include layout="@layout/content_fragment_search_result"
-            android:id="@+id/fragment_search_result_main_content"
             app:isGone="@{(viewModel.once || viewModel.error) ? true : false}"
             />
 

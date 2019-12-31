@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/system_floor1"
+        android:text="@string/system_floor_1"
+        android:gravity="left|center_vertical"
+        android:padding="10dp" />
+
+    <com.xihu.mywanandroid.ui.view.TagSelectionView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tags_floor1"
+        android:layout_marginHorizontal="20dp"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/system_floor2"
+        android:text="@string/system_floor_2"
+        android:gravity="left|center_vertical"
+        android:padding="10dp" />
+
+    <com.xihu.mywanandroid.ui.view.TagSelectionView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:id="@+id/tags_floor2"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:id="@+id/system_articles"
+        app:layoutManager=".ui.adapters.RecyclerViewLinearLayoutManager"
+        android:orientation="vertical"
+        />
+</LinearLayout>

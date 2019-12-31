@@ -21,4 +21,7 @@
     <string name="search_hint">请输入....</string>
 
     <string name="lastest_proj">最新项目</string>
+
+    <string name="system_floor_1">一级分类</string>
+    <string name="system_floor_2">二级分类</string>
 </resources>

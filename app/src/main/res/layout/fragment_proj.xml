@@ -22,7 +22,6 @@
         >
 
         <include layout="@layout/content_fragment_proj"
-            android:id="@+id/fragment_home_main_content"
             app:isGone="@{viewModel.error ? true : !viewModel.onceLoading}"
             />
 

@@ -18,7 +18,6 @@ class HomeViewModel : BaseViewModel() {
     val topArticles = MutableLiveData<List<Article>>()
     val homeArticles = MutableLiveData<ListArticles>()
     val topBanners = MutableLiveData<List<Banner>>()
-    val onceLoading = MutableLiveData<Boolean>(false)
 
     fun loadTopArticles() = launchUI {
         val response = repository.topArticles()
@@ -37,7 +36,6 @@ class HomeViewModel : BaseViewModel() {
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun loadHomeItems() = launchUI {
-        onceLoading.value = false
         coroutineScope {
             async {
                 topArticles.value = repository.topArticles().data.asSequence().map {
@@ -54,6 +52,5 @@ class HomeViewModel : BaseViewModel() {
              homeArticles.value = repository.homeArticles(page.getAndIncrement()).data
             }
         }
-        onceLoading.value = true
     }
 }

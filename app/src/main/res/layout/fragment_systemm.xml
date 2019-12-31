@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.fragments.SystemmFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
+    <data>
+        <variable
+            name="viewModel"
+            type="com.xihu.mywanandroid.ui.jetpack.viewmodels.SystemViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        tools:context=".ui.fragments.SystemmFragment"
+        android:onClick="onRetry">
 
-</FrameLayout>
+        <include
+            layout="@layout/content_fragment_system"
+            app:isGone="@{(viewModel.once || viewModel.error) ? true : false}" />
+
+        <include layout="@layout/network_status_views" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

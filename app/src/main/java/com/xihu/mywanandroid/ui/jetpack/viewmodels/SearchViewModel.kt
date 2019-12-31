@@ -26,7 +26,6 @@ class SearchViewModel : BaseViewModel() {
     private fun refreshHotkeys() = launchUI {
         hotkeys.value = RemoteRepository.instance.hotKeys().data
 
-
         searchKeys.value = (0..5).asSequence().map { index ->
             SearchKey(SEARCH_KEYS_SP+index, System.currentTimeMillis()-index*1000, tempKeys[index])
         }.toList()

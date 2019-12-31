@@ -40,7 +40,7 @@ class BottomRefreshAdapter<T, DB:ViewDataBinding> private constructor(clazz: Cla
         holder: ViewHolder,
         position: Int
     ) {
-        val maxIndex = if (isEnd) beans!!.size() else beans!!.size()-1
+        val maxIndex = beans!!.size()
         if (position < maxIndex) {
             onBindView?.invoke(
                 holder.bindr as DB,
