@@ -5,13 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <com.google.android.material.tabs.TabLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/system_floor1"
-        android:text="@string/system_floor_1"
-        android:gravity="left|center_vertical"
-        android:padding="10dp" />
+        android:id="@+id/systems_projects"
+        />
 
     <com.xihu.mywanandroid.ui.view.TagSelectionView
         android:layout_width="match_parent"

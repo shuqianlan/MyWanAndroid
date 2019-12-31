@@ -1,7 +1,6 @@
 package com.xihu.mywanandroid.net.api
 
 import com.xihu.mywanandroid.net.beans.*
-import com.xihu.mywanandroid.net.beans.*
 import retrofit2.http.*
 
 interface ApiService {
@@ -34,4 +33,10 @@ interface ApiService {
 
     @GET("article/listproject/{page}/json")
     suspend fun lastestProjestList(@Path("page") page:Int):ResponseData<ProjectItems>
+
+    @GET("tree/json")
+    suspend fun systems():ResponseData<List<SystemBean>>
+
+    @GET("article/list/{page}/json")
+    suspend fun systemArticles(@Path("page") page:Int, @Query("cid") cid:Int):ResponseData<ListArticles>
 }

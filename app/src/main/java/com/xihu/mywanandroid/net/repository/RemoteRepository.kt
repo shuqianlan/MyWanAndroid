@@ -88,4 +88,13 @@ class RemoteRepository private constructor(): BaseRepository() {
     suspend fun lastestProjectItems(page:Int) = request{
         apiService.lastestProjestList(page)
     }
+
+    suspend fun systems() = request {
+        apiService.systems()
+    }
+
+    suspend fun systemArticles(page:Int, cid:Int) = request {
+        apiService.systemArticles(page, cid)
+    }
+
 }
