@@ -62,6 +62,7 @@ class SystemmFragment : BaseViewModelFragment<SystemViewModel>() {
             }
 
             override fun onTabSelected(p0: TabLayout.Tab?) {
+                tags_floor2.removeAllViews()
                 val datas = floor2Datas[(p0!!.tag as SystemBean).id]
                 datas?.also {
                     tags_floor2.setTags(it.map { bean->
